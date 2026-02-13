@@ -17,9 +17,14 @@ export function Navbar() {
               MedDecision
             </span>
           </a>
-          <Button className="rounded-full px-6" size="sm">
-            Sign In
-          </Button>
+          <div className="flex items-center gap-3">
+            <Button variant="ghost" className="hidden sm:inline-flex" size="sm" asChild>
+              <a href="/login">Sign In</a>
+            </Button>
+            <Button className="rounded-full px-6" size="sm" asChild>
+              <a href="/signup-selection">Sign Up</a>
+            </Button>
+          </div>
         </nav>
       </header>
       <div className="border-b border-border/40 bg-muted/40 px-4 py-2.5 sm:px-6 lg:px-8">

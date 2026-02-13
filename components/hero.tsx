@@ -33,8 +33,8 @@ export function Hero() {
 
         <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <Button asChild size="lg" className="h-12 rounded-full px-10 text-base shadow-lg shadow-primary/25">
-            <Link href="/profile">
-              Plan My Treatment
+            <Link href="/signup-selection">
+              Get Started
               <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
             </Link>
           </Button>
@@ -44,7 +44,7 @@ export function Hero() {
             size="lg"
             className="h-12 rounded-full px-10 text-base text-muted-foreground hover:text-foreground"
           >
-            <Link href="#how-it-works">Learn How It Works</Link>
+            <Link href="/profile">Plan My Treatment</Link>
           </Button>
         </div>
       </div>
