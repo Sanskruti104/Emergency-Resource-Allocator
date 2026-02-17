@@ -12,6 +12,9 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { ArrowLeft, Loader2, CheckCircle2 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { auth } from "@/lib/firebase"
+import { signInWithEmailAndPassword } from "firebase/auth"
+import { toast } from "sonner"
 
 const loginSchema = z.object({
     email: z.string().email("Invalid email address"),
@@ -29,23 +32,78 @@ export default function PatientLoginPage() {
         register,
         handleSubmit,
         formState: { errors },
+        setError,
     } = useForm<LoginFormValues>({
         resolver: zodResolver(loginSchema),
     })
 
     const onSubmit = async (data: LoginFormValues) => {
         setIsSubmitting(true)
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1500))
+        try {
+            if (!auth) {
+                throw new Error("Authentication is not configured.")
+            }
 
-        // Set user role cookie
-        document.cookie = "user-role=patient; path=/"
+            // 1. Sign in with Firebase
+            const userCredential = await signInWithEmailAndPassword(auth, data.email, data.password)
+            const user = userCredential.user
 
-        setIsSubmitting(false)
-        setIsSuccess(true)
-        setTimeout(() => {
-            router.push("/profile")
-        }, 1500)
+            // 2. Fetch user role from internal API
+            const response = await fetch(`/api/users/${user.uid}`)
+
+            if (!response.ok) {
+                if (response.status === 404) {
+                    throw new Error("User record not found in database.")
+                }
+                throw new Error("Failed to verify user role.")
+            }
+
+            const userData = await response.json()
+
+            // 3. Verify role
+            if (userData.role !== "patient") {
+                // Sign out if role doesn't match to prevent unwanted access
+                await auth.signOut()
+                throw new Error("role-mismatch")
+            }
+
+            // Set user role cookie for middleware/persistence if needed
+            document.cookie = `user-role=patient; path=/; max-age=${60 * 60 * 24 * 7}` // 7 days
+
+            setIsSuccess(true)
+            setTimeout(() => {
+                router.push("/profile")
+            }, 1500)
+
+        } catch (error: any) {
+            console.error("Login error:", error)
+            let errorMessage = "Invalid email or password. Please try again."
+
+            if (error.message === "role-mismatch") {
+                errorMessage = "This account is not registered as a patient."
+            } else if (error.code?.startsWith("auth/")) {
+                if (error.code === "auth/user-not-found" || error.code === "auth/wrong-password" || error.code === "auth/invalid-credential") {
+                    errorMessage = "Invalid email or password."
+                } else if (error.code === "auth/network-request-failed") {
+                    errorMessage = "Network error. Please check your connection."
+                } else {
+                    errorMessage = `Authentication error: ${error.code}`
+                }
+            } else if (error.message === "User record not found in database.") {
+                errorMessage = "Account authenticated but profile not found. Please contact support."
+            } else if (error.status === 500 || error.message.includes("establish session")) {
+                errorMessage = "Server configuration error. Please check environment variables (Firebase Admin)."
+            }
+
+            toast.error(errorMessage)
+
+            if (error.message === "role-mismatch") {
+                // We don't necessarily want to highlight a field if it's a role issue, 
+                // but toast covers it.
+            }
+        } finally {
+            setIsSubmitting(false)
+        }
     }
 
     if (isSuccess) {

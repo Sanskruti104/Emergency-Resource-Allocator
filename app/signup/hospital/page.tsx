@@ -20,6 +20,9 @@ import {
 } from "@/components/ui/select"
 import { ArrowLeft, Loader2, CheckCircle2, Building2, ShieldCheck, UserCog, Info } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { auth } from "@/lib/firebase"
+import { createUserWithEmailAndPassword } from "firebase/auth"
+import { toast } from "sonner"
 
 const hospitalSchema = z.object({
     // Section 1: Basic Info
@@ -61,6 +64,7 @@ export default function HospitalSignUpPage() {
         handleSubmit,
         formState: { errors, isValid },
         setValue,
+        setError,
         watch,
     } = useForm<HospitalFormValues>({
         resolver: zodResolver(hospitalSchema),
@@ -74,12 +78,59 @@ export default function HospitalSignUpPage() {
 
     const onSubmit = async (data: HospitalFormValues) => {
         setIsSubmitting(true)
-        await new Promise((resolve) => setTimeout(resolve, 2000))
-        setIsSubmitting(false)
-        setIsSuccess(true)
-        setTimeout(() => {
-            router.push("/")
-        }, 3000)
+        try {
+            if (!auth) {
+                throw new Error("Authentication is not configured. Please check your environment variables.")
+            }
+
+            // 1. Create user in Firebase
+            const userCredential = await createUserWithEmailAndPassword(auth, data.adminEmail, data.password)
+            const user = userCredential.user
+
+            // 2. Register in MongoDB via internal API
+            const response = await fetch("/api/users/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    uid: user.uid,
+                    role: "hospital",
+                    hospitalName: data.hospitalName,
+                    email: data.adminEmail,
+                    contactNumber: data.contactNumber,
+                    adminName: data.adminName,
+                }),
+            })
+
+            if (!response.ok) {
+                throw new Error("Failed to register in database")
+            }
+
+            setIsSuccess(true)
+            setTimeout(() => {
+                router.push("/hospital/dashboard")
+            }, 3000)
+        } catch (error: any) {
+            console.error("Hospital signup error:", error)
+            let errorMessage = "An error occurred during enrollment. Please try again."
+
+            if (error.code === "auth/email-already-in-use") {
+                errorMessage = "This admin email is already registered."
+                setError("adminEmail", { type: "manual", message: errorMessage })
+            } else if (error.code === "auth/weak-password") {
+                errorMessage = "The password is too weak."
+                setError("password", { type: "manual", message: errorMessage })
+            } else if (error.code === "auth/network-request-failed") {
+                errorMessage = "Network error. Please check your connection."
+            } else if (error.message === "Failed to register in database") {
+                errorMessage = "Account created but database sync failed. Please contact support."
+            }
+
+            toast.error(errorMessage)
+        } finally {
+            setIsSubmitting(false)
+        }
     }
 
     if (isSuccess) {

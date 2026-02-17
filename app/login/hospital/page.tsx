@@ -12,6 +12,9 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { ArrowLeft, Loader2, Building2, CheckCircle2 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { auth } from "@/lib/firebase"
+import { signInWithEmailAndPassword } from "firebase/auth"
+import { toast } from "sonner"
 
 const loginSchema = z.object({
     email: z.string().email("Invalid email address"),
@@ -29,23 +32,75 @@ export default function HospitalLoginPage() {
         register,
         handleSubmit,
         formState: { errors },
+        setError,
     } = useForm<LoginFormValues>({
         resolver: zodResolver(loginSchema),
     })
 
     const onSubmit = async (data: LoginFormValues) => {
         setIsSubmitting(true)
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1500))
+        try {
+            if (!auth) {
+                throw new Error("Authentication is not configured.")
+            }
 
-        // Set user role cookie
-        document.cookie = "user-role=hospital; path=/"
+            // 1. Sign in with Firebase
+            const userCredential = await signInWithEmailAndPassword(auth, data.email, data.password)
+            const user = userCredential.user
 
-        setIsSubmitting(false)
-        setIsSuccess(true)
-        setTimeout(() => {
-            router.push("/hospital/dashboard")
-        }, 1500)
+            // 2. Get ID Token
+            const idToken = await user.getIdToken()
+
+            // 3. Call Session API to set secure cookies
+            const sessionResponse = await fetch('/api/auth/session', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ idToken })
+            })
+
+            if (!sessionResponse.ok) {
+                const errorData = await sessionResponse.json()
+                throw new Error(errorData.error || "Failed to establish session.")
+            }
+
+            const { role } = await sessionResponse.json()
+
+            // 4. Verify role double check (though API already does it)
+            if (role !== "hospital") {
+                await fetch('/api/auth/session', { method: 'DELETE' })
+                await auth.signOut()
+                throw new Error("role-mismatch")
+            }
+
+            setIsSuccess(true)
+            setTimeout(() => {
+                router.push("/hospital/dashboard")
+            }, 1500)
+
+        } catch (error: any) {
+            console.error("Login error:", error)
+            let errorMessage = "Invalid email or password. Please try again."
+
+            if (error.message === "role-mismatch") {
+                errorMessage = "This account is not registered as a hospital."
+            } else if (error.code?.startsWith("auth/")) {
+                if (error.code === "auth/user-not-found" || error.code === "auth/wrong-password" || error.code === "auth/invalid-credential") {
+                    errorMessage = "Invalid email or password."
+                } else if (error.code === "auth/network-request-failed") {
+                    errorMessage = "Network error. Please check your connection."
+                } else {
+                    errorMessage = `Authentication error: ${error.code}`
+                }
+            } else if (error.message === "User record not found in database.") {
+                errorMessage = "Account authenticated but profile not found. Please contact support."
+            } else if (error.message.includes("establish session") || error.message.includes("500")) {
+                errorMessage = "Server configuration error. Please check environment variables (Firebase Admin)."
+            }
+
+            toast.error(errorMessage)
+        } finally {
+            setIsSubmitting(false)
+        }
     }
 
     if (isSuccess) {
