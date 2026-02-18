@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useMemo, useState, useEffect } from "react"
 import { useSearchParams } from "next/navigation"
 import { Navbar } from "@/components/navbar"
 import { Badge } from "@/components/ui/badge"
@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Building2, SlidersHorizontal } from "lucide-react"
+import { Building2, SlidersHorizontal, Loader2, AlertCircle } from "lucide-react"
 import { HospitalCard, type Hospital } from "./hospital-card"
 
 function formatBudget(value: number): string {
@@ -21,128 +21,22 @@ function formatBudget(value: number): string {
   return `${(value / 1000).toFixed(0)}K`
 }
 
-const hospitalData: Hospital[] = [
-  {
-    id: "city-general",
-    name: "City General Hospital",
-    treatmentPath: "Arthroscopic Surgery",
-    suitabilityScore: 92,
-    costRange: "\u20B92.5L \u2013 \u20B94.2L",
-    insuranceAccepted: ["Private", "Government"],
-    bedAvailability: "High",
-    icuReadiness: true,
-    fitReasons: [
-      {
-        label: "Specialty Match",
-        description:
-          "Dedicated orthopedic wing with 15+ years of arthroscopic procedures and board-certified specialists.",
-        match: true,
-      },
-      {
-        label: "Infrastructure Readiness",
-        description:
-          "Fully equipped operation theaters with latest arthroscopy equipment, post-op recovery suites, and 24/7 nursing support.",
-        match: true,
-      },
-      {
-        label: "Cost Compatibility",
-        description:
-          "Estimated cost falls within your specified budget range of \u20B92L\u2013\u20B95L.",
-        match: true,
-      },
-      {
-        label: "Urgency Match",
-        description:
-          "Planned procedures can be scheduled within 2 weeks based on current availability.",
-        match: true,
-      },
-    ],
-  },
-  {
-    id: "apollo-multispecialty",
-    name: "Apollo Multispecialty Centre",
-    treatmentPath: "Arthroscopic Surgery",
-    suitabilityScore: 84,
-    costRange: "\u20B93.8L \u2013 \u20B95.5L",
-    insuranceAccepted: ["Private"],
-    bedAvailability: "Medium",
-    icuReadiness: true,
-    fitReasons: [
-      {
-        label: "Specialty Match",
-        description:
-          "Multi-specialty facility with experienced orthopedic surgeons and high case volume.",
-        match: true,
-      },
-      {
-        label: "Infrastructure Readiness",
-        description:
-          "Modern operation theaters with robotic-assisted capabilities. Dedicated physiotherapy unit on-site.",
-        match: true,
-      },
-      {
-        label: "Cost Compatibility",
-        description:
-          "Upper estimate slightly exceeds budget ceiling. Discuss payment plans with the billing department.",
-        match: false,
-      },
-      {
-        label: "Urgency Match",
-        description:
-          "Current wait time for planned procedures is approximately 3 weeks.",
-        match: true,
-      },
-    ],
-  },
-  {
-    id: "district-medical",
-    name: "District Medical College Hospital",
-    treatmentPath: "Arthroscopic Surgery",
-    suitabilityScore: 71,
-    costRange: "\u20B91.2L \u2013 \u20B92.8L",
-    insuranceAccepted: ["Government", "Self-Funded"],
-    bedAvailability: "Low",
-    icuReadiness: false,
-    fitReasons: [
-      {
-        label: "Specialty Match",
-        description:
-          "General orthopedic department with growing arthroscopy program. Faculty-supervised residents.",
-        match: true,
-      },
-      {
-        label: "Infrastructure Readiness",
-        description:
-          "Basic arthroscopy setup available. ICU facilities are currently at capacity; external transfer protocol in place.",
-        match: false,
-      },
-      {
-        label: "Cost Compatibility",
-        description:
-          "Highly affordable option, well within budget. Government subsidies may further reduce out-of-pocket costs.",
-        match: true,
-      },
-      {
-        label: "Urgency Match",
-        description:
-          "Wait time can be 4\u20136 weeks due to higher patient volume and limited slots.",
-        match: false,
-      },
-    ],
-  },
-]
-
 type SortOption = "suitability" | "lowest-cost" | "fastest-recovery"
 
 export function TreatmentRecommendations() {
   const searchParams = useSearchParams()
   const [sortBy, setSortBy] = useState<SortOption>("suitability")
+  const [hospitals, setHospitals] = useState<Hospital[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState("")
 
   const treatment = searchParams.get("treatment") || "N/A"
   const urgency = searchParams.get("urgency") || "N/A"
   const budgetMin = Number(searchParams.get("budgetMin") || 200000)
   const budgetMax = Number(searchParams.get("budgetMax") || 1000000)
   const insurance = searchParams.get("insurance") || "N/A"
+  const diagnosis = searchParams.get("diagnosis")
+  const age = searchParams.get("age")
 
   const contextItems = [
     { label: "Treatment", value: treatment },
@@ -154,8 +48,57 @@ export function TreatmentRecommendations() {
     { label: "Insurance", value: insurance },
   ]
 
+  useEffect(() => {
+    async function fetchMatches() {
+      setIsLoading(true)
+      try {
+        const payload = {
+          diagnosisCategory: diagnosis,
+          urgency,
+          budgetMin,
+          budgetMax,
+          insuranceType: insurance, // Mapping slightly different names if needed
+          ageGroup: age,
+          treatment
+        }
+
+        const res = await fetch("/api/treatment/match", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        })
+
+        if (!res.ok) throw new Error("Failed to fetch matches")
+
+        const data = await res.json()
+        if (data.matches) {
+          // Transform API matches to Hospital type if fields differ
+          const mappedHospitals = data.matches.map((h: any) => ({
+            id: h.id || h._id,
+            name: h.hospitalName,
+            treatmentPath: treatment,
+            suitabilityScore: h.suitabilityScore || 0,
+            costRange: h.costRange || "Contact for Price",
+            insuranceAccepted: h.insuranceNetworks || [],
+            bedAvailability: h.capacity?.totalBeds > 50 ? "High" : "Medium", // Mock mapping if data missing
+            icuReadiness: h.capacity?.icuBeds > 0,
+            fitReasons: h.fitReasons || []
+          }))
+          setHospitals(mappedHospitals)
+        }
+      } catch (err) {
+        console.error(err)
+        setError("Could not load recommendations at this time.")
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchMatches()
+  }, [treatment, urgency, budgetMin, budgetMax, insurance, diagnosis, age])
+
   const sortedHospitals = useMemo(() => {
-    const sorted = [...hospitalData]
+    const sorted = [...hospitals]
     switch (sortBy) {
       case "suitability":
         sorted.sort((a, b) => b.suitabilityScore - a.suitabilityScore)
@@ -184,7 +127,7 @@ export function TreatmentRecommendations() {
         break
     }
     return sorted
-  }, [sortBy])
+  }, [sortBy, hospitals])
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -255,12 +198,29 @@ export function TreatmentRecommendations() {
             </div>
           </div>
 
-          {/* Hospital Cards */}
-          <div className="flex flex-col gap-6">
-            {sortedHospitals.map((hospital) => (
-              <HospitalCard key={hospital.id} hospital={hospital} />
-            ))}
-          </div>
+          {/* Content Area */}
+          {isLoading ? (
+            <div className="flex flex-col items-center justify-center py-20 gap-4">
+              <Loader2 className="h-10 w-10 animate-spin text-primary" />
+              <p className="text-muted-foreground">Finding the best matches for you...</p>
+            </div>
+          ) : error ? (
+            <div className="rounded-xl border border-destructive/20 bg-destructive/5 p-6 text-center">
+              <AlertCircle className="mx-auto h-8 w-8 text-destructive mb-3" />
+              <p className="text-destructive font-medium">{error}</p>
+            </div>
+          ) : sortedHospitals.length === 0 ? (
+            <div className="text-center py-20 rounded-xl border border-dashed">
+              <p className="text-muted-foreground">No matching hospitals found in your area matching criteria.</p>
+              <p className="text-sm text-muted-foreground mt-2">Try adjusting your budget or filters.</p>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-6">
+              {sortedHospitals.map((hospital) => (
+                <HospitalCard key={hospital.id} hospital={hospital} />
+              ))}
+            </div>
+          )}
 
           {/* Disclaimer */}
           <div className="mt-10 rounded-xl border border-border/60 bg-muted/30 px-6 py-4 text-center">

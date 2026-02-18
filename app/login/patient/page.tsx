@@ -67,13 +67,21 @@ export default function PatientLoginPage() {
                 throw new Error("role-mismatch")
             }
 
+            // 4. Create Session Cookie (Critical for Server Actions / API Routes)
+            const idToken = await user.getIdToken();
+            await fetch("/api/auth/session", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ idToken }),
+            });
+
             // Set user role cookie for middleware/persistence if needed
             document.cookie = `user-role=patient; path=/; max-age=${60 * 60 * 24 * 7}` // 7 days
 
             setIsSuccess(true)
             setTimeout(() => {
                 router.push("/profile")
-            }, 1500)
+            }, 1000)
 
         } catch (error: any) {
             console.error("Login error:", error)

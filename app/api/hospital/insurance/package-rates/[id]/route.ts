@@ -5,9 +5,10 @@ import { ObjectId } from "mongodb";
 
 export async function PUT(
     request: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        const { id } = await params;
         const session = await getServerSession();
         if (!session) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -31,7 +32,7 @@ export async function PUT(
         };
 
         const result = await db.collection("insurance_package_rates").updateOne(
-            { _id: new ObjectId(params.id), hospitalUid: session.uid },
+            { _id: new ObjectId(id), hospitalUid: session.uid },
             { $set: updateData }
         );
 
@@ -48,9 +49,10 @@ export async function PUT(
 
 export async function DELETE(
     request: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        const { id } = await params;
         const session = await getServerSession();
         if (!session) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -60,7 +62,7 @@ export async function DELETE(
         const db = client.db();
 
         const result = await db.collection("insurance_package_rates").deleteOne({
-            _id: new ObjectId(params.id),
+            _id: new ObjectId(id),
             hospitalUid: session.uid
         });
 
