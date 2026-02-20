@@ -44,6 +44,7 @@ export interface Hospital {
   bedAvailability: "Low" | "Medium" | "High"
   icuReadiness: boolean
   fitReasons: FitReason[]
+  distance?: number | null
 }
 
 const bedColors: Record<string, string> = {
@@ -73,10 +74,17 @@ export function HospitalCard({ hospital }: { hospital: Hospital }) {
         <div className="flex flex-col gap-6 p-6">
           {/* Header row */}
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-            <div className="flex flex-col gap-1.5">
-              <h3 className="text-lg font-semibold text-foreground">
-                {hospital.name}
-              </h3>
+            <div className="flex flex-col gap-1.5 leading-tight">
+              <div className="flex items-center gap-2">
+                <h3 className="text-lg font-semibold text-foreground">
+                  {hospital.name}
+                </h3>
+                {hospital.distance !== undefined && hospital.distance !== null && (
+                  <Badge variant="outline" className="text-[10px] font-bold py-0 h-4 border-slate-200 text-slate-500">
+                    {hospital.distance.toFixed(1)} km
+                  </Badge>
+                )}
+              </div>
               <p className="text-sm text-muted-foreground">
                 {hospital.treatmentPath}
               </p>

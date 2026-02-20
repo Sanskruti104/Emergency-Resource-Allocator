@@ -1,5 +1,5 @@
 {
-    "coronary_artery_disease": {
+    "coronary-artery-disease": {
         "category": "Cardiac",
         "condition_name": "Coronary Artery Disease",
         "simple_explanation": "A condition where the heart's main blood vessels become damaged or diseased, usually due to plaque buildup.",
@@ -178,7 +178,7 @@
             }
         ]
     },
-    "knee_osteoarthritis": {
+    "osteoarthritis-knee": {
         "category": "Orthopedic",
         "condition_name": "Knee Osteoarthritis",
         "simple_explanation": "Wear and tear of the knee joint surface, causing pain and stiffness.",
@@ -214,7 +214,7 @@
             }
         ]
     },
-    "hip_osteoarthritis": {
+    "osteoarthritis-hip": {
         "category": "Orthopedic",
         "condition_name": "Hip Osteoarthritis",
         "simple_explanation": "Wear and tear of the hip joint cartilage.",
@@ -248,7 +248,7 @@
             }
         ]
     },
-    "femur_fracture": {
+    "femur-fracture": {
         "category": "Orthopedic",
         "condition_name": "Femur Fracture",
         "simple_explanation": "A break in the thigh bone, usually due to trauma.",
@@ -283,7 +283,7 @@
             }
         ]
     },
-    "lumbar_disc_herniation": {
+    "lumbar-disc-herniation": {
         "category": "Orthopedic",
         "condition_name": "Lumbar Disc Herniation",
         "simple_explanation": "A condition where a disc between the lower back bones slips out and presses on nerves.",
@@ -319,7 +319,7 @@
             }
         ]
     },
-    "acl_ligament_tear": {
+    "acl-ligament-tear": {
         "category": "Orthopedic",
         "condition_name": "ACL Ligament Tear",
         "simple_explanation": "A tear in the ligament that connects the thigh bone to the shin bone.",
@@ -353,7 +353,7 @@
             }
         ]
     },
-    "ischemic_stroke": {
+    "ischemic-stroke": {
         "category": "Neuro",
         "condition_name": "Ischemic Stroke",
         "simple_explanation": "A sudden interruption of blood flow to the brain, caused by a blood clot.",
@@ -390,7 +390,7 @@
             }
         ]
     },
-    "hemorrhagic_stroke": {
+    "hemorrhagic-stroke": {
         "category": "Neuro",
         "condition_name": "Hemorrhagic Stroke",
         "simple_explanation": "A stroke caused by a burst blood vessel in the brain.",
@@ -427,7 +427,7 @@
             }
         ]
     },
-    "brain_tumor": {
+    "brain-tumor": {
         "category": "Neuro",
         "condition_name": "Brain Tumor",
         "simple_explanation": "An abnormal growth of cells in the brain.",
@@ -497,7 +497,7 @@
             }
         ]
     },
-    "parkinsons_disease": {
+    "parkinsons-disease": {
         "category": "Neuro",
         "condition_name": "Parkinson's Disease",
         "simple_explanation": "A progressive nervous system disorder that affects movement.",
@@ -599,7 +599,7 @@
             }
         ]
     },
-    "inguinal_hernia": {
+    "inguinal-hernia": {
         "category": "General Surgery",
         "condition_name": "Inguinal Hernia",
         "simple_explanation": "A condition in which soft tissue bulges through a weak point in the abdominal muscles.",
@@ -633,7 +633,7 @@
             }
         ]
     },
-    "piles_hemorrhoids": {
+    "piles-hemorrhoids": {
         "category": "General Surgery",
         "condition_name": "Piles / Hemorrhoids",
         "simple_explanation": "Swollen and inflamed veins in the rectum and anus that cause discomfort and bleeding.",
@@ -666,7 +666,7 @@
             }
         ]
     },
-    "thyroid_nodule": {
+    "thyroid-nodule": {
         "category": "General Surgery",
         "condition_name": "Thyroid Nodule",
         "simple_explanation": "Abnormal lumps that form in your thyroid gland.",

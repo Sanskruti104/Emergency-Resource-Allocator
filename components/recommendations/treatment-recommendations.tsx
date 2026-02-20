@@ -32,18 +32,20 @@ export function TreatmentRecommendations() {
 
   const treatment = searchParams.get("treatment") || "N/A"
   const urgency = searchParams.get("urgency") || "N/A"
-  const budgetMin = Number(searchParams.get("budgetMin") || 200000)
+  const budgetMin = Number(searchParams.get("budgetMin") || 0)
   const budgetMax = Number(searchParams.get("budgetMax") || 1000000)
   const insurance = searchParams.get("insurance") || "N/A"
   const diagnosis = searchParams.get("diagnosis")
-  const age = searchParams.get("age")
+  const lat = searchParams.get("latitude")
+  const lng = searchParams.get("longitude")
+  const travelFlex = searchParams.get("travelFlexibility")
 
   const contextItems = [
     { label: "Treatment", value: treatment },
     { label: "Urgency", value: urgency },
     {
       label: "Budget",
-      value: `\u20B9${formatBudget(budgetMin)}\u2013\u20B9${formatBudget(budgetMax)}`,
+      value: budgetMax > 0 ? `\u20B9${formatBudget(budgetMin)}\u2013\u20B9${formatBudget(budgetMax)}` : "Any",
     },
     { label: "Insurance", value: insurance },
   ]
@@ -57,9 +59,11 @@ export function TreatmentRecommendations() {
           urgency,
           budgetMin,
           budgetMax,
-          insuranceType: insurance, // Mapping slightly different names if needed
-          ageGroup: age,
-          treatment
+          insuranceType: insurance,
+          treatment,
+          latitude: lat,
+          longitude: lng,
+          travelFlexibility: travelFlex
         }
 
         const res = await fetch("/api/treatment/match", {
@@ -72,7 +76,6 @@ export function TreatmentRecommendations() {
 
         const data = await res.json()
         if (data.matches) {
-          // Transform API matches to Hospital type if fields differ
           const mappedHospitals = data.matches.map((h: any) => ({
             id: h.id || h._id,
             name: h.hospitalName,
@@ -80,9 +83,10 @@ export function TreatmentRecommendations() {
             suitabilityScore: h.suitabilityScore || 0,
             costRange: h.costRange || "Contact for Price",
             insuranceAccepted: h.insuranceNetworks || [],
-            bedAvailability: h.capacity?.totalBeds > 50 ? "High" : "Medium", // Mock mapping if data missing
+            bedAvailability: h.capacity?.totalBeds > 50 ? "High" : "Medium",
             icuReadiness: h.capacity?.icuBeds > 0,
-            fitReasons: h.fitReasons || []
+            fitReasons: h.fitReasons || [],
+            distance: h.distance
           }))
           setHospitals(mappedHospitals)
         }
@@ -95,7 +99,7 @@ export function TreatmentRecommendations() {
     }
 
     fetchMatches()
-  }, [treatment, urgency, budgetMin, budgetMax, insurance, diagnosis, age])
+  }, [treatment, urgency, budgetMin, budgetMax, insurance, diagnosis, lat, lng, travelFlex])
 
   const sortedHospitals = useMemo(() => {
     const sorted = [...hospitals]

@@ -50,7 +50,7 @@ export function StepBasicContext({ formData, onChange }: StepBasicContextProps) 
 
                 <div className="grid gap-4 sm:grid-cols-2">
                     <div className="space-y-2">
-                        <Label htmlFor="city">City / Location</Label>
+                        <Label htmlFor="city">City</Label>
                         <Input
                             id="city"
                             placeholder="e.g. Pune"
@@ -58,23 +58,32 @@ export function StepBasicContext({ formData, onChange }: StepBasicContextProps) 
                             onChange={(e) => onChange("city", e.target.value)}
                         />
                     </div>
-
                     <div className="space-y-2">
-                        <Label>Travel Capability</Label>
-                        <Select
-                            value={formData.travelCapability}
-                            onValueChange={(val) => onChange("travelCapability", val)}
-                        >
-                            <SelectTrigger>
-                                <SelectValue placeholder="Select capability" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="Local Only">Local Only</SelectItem>
-                                <SelectItem value="Within State">Within State</SelectItem>
-                                <SelectItem value="Anywhere">Anywhere in India</SelectItem>
-                            </SelectContent>
-                        </Select>
+                        <Label htmlFor="state">State</Label>
+                        <Input
+                            id="state"
+                            placeholder="e.g. Maharashtra"
+                            value={formData.state}
+                            onChange={(e) => onChange("state", e.target.value)}
+                        />
                     </div>
+                </div>
+
+                <div className="space-y-2">
+                    <Label>Travel Capability</Label>
+                    <Select
+                        value={formData.travelCapability}
+                        onValueChange={(val) => onChange("travelCapability", val)}
+                    >
+                        <SelectTrigger>
+                            <SelectValue placeholder="Select capability" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="Local Only">Local Only</SelectItem>
+                            <SelectItem value="Within State">Within State</SelectItem>
+                            <SelectItem value="Anywhere">Anywhere in India</SelectItem>
+                        </SelectContent>
+                    </Select>
                 </div>
             </div>
         </div>

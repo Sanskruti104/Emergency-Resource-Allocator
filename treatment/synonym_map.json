@@ -1,5 +1,5 @@
 {
-    "coronary_artery_disease": [
+    "coronary-artery-disease": [
         "heart blockage",
         "clogged arteries",
         "narrowed heart vessels",
@@ -11,7 +11,7 @@
         "chest pain on exertion",
         "tightness in chest heart"
     ],
-    "heart_failure": [
+    "heart-failure": [
         "heart weak",
         "cant breathe well",
         "fluid in lungs",
@@ -23,7 +23,7 @@
         "cannot lie flat to sleep",
         "fatigue and breathless"
     ],
-    "cardiac_arrhythmia": [
+    "cardiac-arrhythmia": [
         "irregular heartbeat",
         "heart racing",
         "heart skipping beats",
@@ -34,7 +34,7 @@
         "thumping in chest",
         "uneven heart beat"
     ],
-    "valvular_heart_disease": [
+    "valvular-heart-disease": [
         "heart valve problem",
         "leaky valve",
         "heart murmur",
@@ -55,7 +55,7 @@
         "diseased heart muscle",
         "stiff heart muscle"
     ],
-    "knee_osteoarthritis": [
+    "osteoarthritis-knee": [
         "knee bone on bone",
         "knee joint wear",
         "knee arthritis",
@@ -67,7 +67,7 @@
         "knee grinding sound",
         "creaky knees"
     ],
-    "hip_osteoarthritis": [
+    "osteoarthritis-hip": [
         "hip joint pain",
         "hip arthritis",
         "hip bone on bone",
@@ -77,7 +77,7 @@
         "worn out hip",
         "limping from hip pain"
     ],
-    "femur_fracture": [
+    "femur-fracture": [
         "broken thigh bone",
         "femur break",
         "fractured leg bone",
@@ -87,7 +87,7 @@
         "broken femur",
         "thigh bone snapping"
     ],
-    "lumbar_disc_herniation": [
+    "lumbar-disc-herniation": [
         "slipped disc back",
         "sciatica pain",
         "disc bulge lower back",
@@ -98,7 +98,7 @@
         "shooting pain down leg",
         "numbness in lower back"
     ],
-    "acl_ligament_tear": [
+    "acl-ligament-tear": [
         "torn acl",
         "knee ligament snap",
         "knee pop injury",
@@ -109,7 +109,7 @@
         "knee buckling after injury",
         "giving way of knee"
     ],
-    "ischemic_stroke": [
+    "ischemic-stroke": [
         "brain attack",
         "blood clot in brain",
         "sudden brain numbness",
@@ -121,7 +121,7 @@
         "face drooping one side",
         "slurred speech sudden"
     ],
-    "hemorrhagic_stroke": [
+    "hemorrhagic-stroke": [
         "brain bleed",
         "burst vessel brain",
         "bleeding in head",
@@ -132,7 +132,7 @@
         "worst headache of life",
         "sudden brain bleed"
     ],
-    "brain_tumor": [
+    "brain-tumor": [
         "growth in brain",
         "brain mass",
         "tumor in head",
@@ -153,7 +153,7 @@
         "shaking seizures",
         "jerking of limbs"
     ],
-    "parkinsons_disease": [
+    "parkinsons-disease": [
         "shaking hands",
         "tremors",
         "stiffness in movement",
@@ -185,7 +185,7 @@
         "gallbladder stones problem",
         "pain under right ribs"
     ],
-    "inguinal_hernia": [
+    "inguinal-hernia": [
         "groin bulge",
         "hernia in groin",
         "abdominal wall weakness",
@@ -195,7 +195,7 @@
         "groin lump hernia",
         "pain when coughing groin"
     ],
-    "piles_hemorrhoids": [
+    "piles-hemorrhoids": [
         "piles",
         "hemorrhoids",
         "bleeding during stool",
@@ -206,7 +206,7 @@
         "pain when sitting down",
         "blood after pooping"
     ],
-    "thyroid_nodule": [
+    "thyroid-nodule": [
         "neck lump thyroid",
         "swollen thyroid gland",
         "nodule on neck",
@@ -215,5 +215,17 @@
         "thyroid swelling",
         "lump in thyroid",
         "difficulty swallowing thyroid"
+    ],
+    "cataract": [
+        "blurry vision",
+        "cloudy vision",
+        "eye cataract",
+        "vision lens clouding",
+        "difficulty seeing at night",
+        "halos around lights",
+        "faded colors vision",
+        "cloudy eye lens",
+        "senile cataract",
+        "eye surgery for vision"
     ]
 }

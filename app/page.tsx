@@ -4,6 +4,7 @@ import { FeatureCards } from "@/components/feature-cards"
 import { HowItWorks } from "@/components/how-it-works"
 import { TrustBar } from "@/components/trust-bar"
 import { Footer } from "@/components/footer"
+import { InteractiveHospitalMap } from "@/components/map"
 
 export default function Page() {
   return (
@@ -11,6 +12,7 @@ export default function Page() {
       <Navbar />
       <main className="flex-1">
         <Hero />
+        <InteractiveHospitalMap />
         <FeatureCards />
         <HowItWorks />
       </main>

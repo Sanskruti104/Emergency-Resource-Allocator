@@ -26,6 +26,7 @@ interface FormData {
   // Step 1
   ageGroup: string
   city: string
+  state: string
   travelCapability: string
   // Step 2
   diagnosisCategory: string
@@ -52,6 +53,7 @@ export function PatientProfileFlow() {
   const [formData, setFormData] = useState<FormData>({
     ageGroup: "",
     city: "",
+    state: "",
     travelCapability: "",
     diagnosisCategory: "",
     conditionKey: "",
@@ -95,7 +97,7 @@ export function PatientProfileFlow() {
   const canContinue = useCallback(() => {
     switch (currentStep) {
       case 1:
-        return !!formData.ageGroup && !!formData.city && !!formData.travelCapability
+        return !!formData.ageGroup && !!formData.city && !!formData.state && !!formData.travelCapability
       case 2:
         return !!formData.diagnosisCategory && !!formData.urgency && !!formData.timeline
       case 3:

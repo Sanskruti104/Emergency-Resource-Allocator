@@ -15,9 +15,25 @@ export interface Condition {
     keywords: string[];
     name: string;
     category: string; // e.g., Orthopedics, Cardiology
+    conditionCategory?: string; // Standardized key used for matching
     simpleExplanation: string;
     medicalExplanation: string;
     treatments: Treatment[];
+}
+
+export interface PatientContext {
+    latitude?: number | null;
+    longitude?: number | null;
+    travelFlexibility?: string;
+    city?: string;
+    state?: string;
+}
+
+export interface RecommendationResult extends Condition {
+    patientContext?: PatientContext;
+    selectedTreatment?: string;
+    resourceIntensity?: string;
+    requiresICU?: boolean;
 }
 
 export const medicalData: Condition[] = [
@@ -25,7 +41,7 @@ export const medicalData: Condition[] = [
         id: "osteoarthritis-knee",
         keywords: ["knee pain", "joint pain", "difficulty walking", "knee arthritis", "knee injury"],
         name: "Osteoarthritis (Knee)",
-        category: "Orthopedics",
+        category: "Orthopedic",
         simpleExplanation: "Wear and tear of the knee joint causing pain and stiffness. It happens when the protective cushion (cartilage) between your bones wears down.",
         medicalExplanation: "Degenerative joint disease characterized by the breakdown of articular cartilage and underlying bone. Symptoms include joint pain, stiffness, and locomotor restriction.",
         treatments: [
@@ -62,7 +78,7 @@ export const medicalData: Condition[] = [
         id: "coronary-artery-disease",
         keywords: ["heart blockage", "chest pain", "angina", "shortness of breath", "heart attack"],
         name: "Coronary Artery Disease (Heart Blockage)",
-        category: "Cardiology",
+        category: "Cardiac",
         simpleExplanation: "Narrowing of the blood vessels that supply blood to the heart. This can cause chest pain or a heart attack.",
         medicalExplanation: "Pathological process characterized by the accumulation of atherosclerotic plaque within the coronary arteries, leading to reduced myocardial blood flow.",
         treatments: [
@@ -118,7 +134,7 @@ export const medicalData: Condition[] = [
         id: "cataract",
         keywords: ["cataract", "blurry vision", "cloudy vision", "eye surgery"],
         name: "Cataract",
-        category: "Ophthalmology",
+        category: "Other",
         simpleExplanation: "Clouding of the eye's natural lens, which lies behind the iris and the pupil. It is the most common cause of vision loss in people over age 40.",
         medicalExplanation: "Opacification of the crystalline lens of the eye which obstructs the passage of light.",
         treatments: [

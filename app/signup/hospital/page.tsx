@@ -98,6 +98,9 @@ export default function HospitalSignUpPage() {
                     email: data.adminEmail,
                     contactNumber: data.contactNumber,
                     adminName: data.adminName,
+                    address: data.address,
+                    city: data.city,
+                    state: data.state
                 }),
             })
 
