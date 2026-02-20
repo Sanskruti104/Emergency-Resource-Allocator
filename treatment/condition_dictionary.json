@@ -1,0 +1,703 @@
+{
+    "coronary_artery_disease": {
+        "category": "Cardiac",
+        "condition_name": "Coronary Artery Disease",
+        "simple_explanation": "A condition where the heart's main blood vessels become damaged or diseased, usually due to plaque buildup.",
+        "medical_explanation": "Hardening and narrowing of the arteries that provide blood to the heart muscle, often caused by atherosclerosis, leading to reduced oxygen supply (ischemia).",
+        "treatment_paths": [
+            {
+                "name": "Medication & Lifestyle Management",
+                "requires_icu": false,
+                "intensity": "Low",
+                "required_capabilities": [
+                    "Primary Care",
+                    "Cardiology Consultation"
+                ]
+            },
+            {
+                "name": "Angioplasty and Stenting (PCI)",
+                "requires_icu": true,
+                "intensity": "High",
+                "required_capabilities": [
+                    "Cath Lab",
+                    "Cardiac ICU",
+                    "Interventional Cardiology"
+                ]
+            },
+            {
+                "name": "Coronary Artery Bypass Grafting (CABG)",
+                "requires_icu": true,
+                "intensity": "Very High",
+                "required_capabilities": [
+                    "Cardiac OT",
+                    "Cardiac ICU",
+                    "Cardiothoracic Surgery"
+                ]
+            }
+        ]
+    },
+    "heart_failure": {
+        "category": "Cardiac",
+        "condition_name": "Heart Failure",
+        "simple_explanation": "A chronic condition where the heart doesn't pump blood as well as it should.",
+        "medical_explanation": "A complex clinical syndrome that results from any structural or functional impairment of ventricular filling or ejection of blood.",
+        "treatment_paths": [
+            {
+                "name": "Medical Management & Diuretics",
+                "requires_icu": false,
+                "intensity": "Low",
+                "required_capabilities": [
+                    "Cardiology Consultation"
+                ]
+            },
+            {
+                "name": "Cardiac Resynchronization Therapy (CRT)",
+                "requires_icu": true,
+                "intensity": "High",
+                "required_capabilities": [
+                    "EP Lab",
+                    "Electrophysiology",
+                    "Cardiac ICU"
+                ]
+            },
+            {
+                "name": "Left Ventricular Assist Device (LVAD)",
+                "requires_icu": true,
+                "intensity": "Very High",
+                "required_capabilities": [
+                    "Cardiac OT",
+                    "Cardiac ICU"
+                ]
+            }
+        ]
+    },
+    "cardiac_arrhythmia": {
+        "category": "Cardiac",
+        "condition_name": "Cardiac Arrhythmia",
+        "simple_explanation": "Interruption of the heart's normal electrical signals, causing irregular heartbeats.",
+        "medical_explanation": "Any of a large and heterogeneous group of conditions in which there is abnormal electrical activity in the heart.",
+        "treatment_paths": [
+            {
+                "name": "Medication & Monitoring",
+                "requires_icu": false,
+                "intensity": "Low",
+                "required_capabilities": [
+                    "Cardiology Consultation"
+                ]
+            },
+            {
+                "name": "Radiofrequency Ablation",
+                "requires_icu": false,
+                "intensity": "Medium",
+                "required_capabilities": [
+                    "EP Lab",
+                    "Electrophysiology"
+                ]
+            },
+            {
+                "name": "Pacemaker/ICD Implantation",
+                "requires_icu": true,
+                "intensity": "High",
+                "required_capabilities": [
+                    "Cath Lab",
+                    "Electrophysiology",
+                    "Cardiac ICU"
+                ]
+            }
+        ]
+    },
+    "valvular_heart_disease": {
+        "category": "Cardiac",
+        "condition_name": "Valvular Heart Disease",
+        "simple_explanation": "Damage or defect in one of the four heart valves.",
+        "medical_explanation": "Any disease process involving one or more of the four valves of the heart (aortic, mitral, tricuspid, and pulmonary).",
+        "treatment_paths": [
+            {
+                "name": "Valvuloplasty",
+                "requires_icu": false,
+                "intensity": "Medium",
+                "required_capabilities": [
+                    "Cath Lab",
+                    "Interventional Cardiology"
+                ]
+            },
+            {
+                "name": "TAVI / TAVR",
+                "requires_icu": true,
+                "intensity": "High",
+                "required_capabilities": [
+                    "Cardiac OT",
+                    "Cath Lab",
+                    "Cardiac ICU"
+                ]
+            },
+            {
+                "name": "Standard Valve Replacement Surgery",
+                "requires_icu": true,
+                "intensity": "Very High",
+                "required_capabilities": [
+                    "Cardiac OT",
+                    "Cardiac ICU",
+                    "Cardiothoracic Surgery"
+                ]
+            }
+        ]
+    },
+    "cardiomyopathy": {
+        "category": "Cardiac",
+        "condition_name": "Cardiomyopathy",
+        "simple_explanation": "A disease of the heart muscle that makes it harder for the heart to pump blood.",
+        "medical_explanation": "A progressive disease of the myocardium (heart muscle) that is often accompanied by impaired cardiac function and arrhythmias.",
+        "treatment_paths": [
+            {
+                "name": "Medical Optimization",
+                "requires_icu": false,
+                "intensity": "Low",
+                "required_capabilities": [
+                    "Cardiology Consultation"
+                ]
+            },
+            {
+                "name": "Alcohol Septal Ablation",
+                "requires_icu": false,
+                "intensity": "Medium",
+                "required_capabilities": [
+                    "Cath Lab",
+                    "Interventional Cardiology"
+                ]
+            },
+            {
+                "name": "Septal Myectomy",
+                "requires_icu": true,
+                "intensity": "Very High",
+                "required_capabilities": [
+                    "Cardiac OT",
+                    "Cardiac ICU",
+                    "Cardiothoracic Surgery"
+                ]
+            }
+        ]
+    },
+    "knee_osteoarthritis": {
+        "category": "Orthopedic",
+        "condition_name": "Knee Osteoarthritis",
+        "simple_explanation": "Wear and tear of the knee joint surface, causing pain and stiffness.",
+        "medical_explanation": "Degenerative joint disease characterized by the breakdown of articular cartilage and subchondral bone in the knee joint.",
+        "treatment_paths": [
+            {
+                "name": "Physical Therapy & Injections",
+                "requires_icu": false,
+                "intensity": "Low",
+                "required_capabilities": [
+                    "Physiotherapy",
+                    "Orthopedic Consultation"
+                ]
+            },
+            {
+                "name": "Arthroscopic Surgery",
+                "requires_icu": false,
+                "intensity": "Medium",
+                "required_capabilities": [
+                    "Daycare Surgery",
+                    "Orthopedic Surgery"
+                ]
+            },
+            {
+                "name": "Total Knee Replacement (TKR)",
+                "requires_icu": true,
+                "intensity": "High",
+                "required_capabilities": [
+                    "Modular OT",
+                    "Orthopedic Specialization",
+                    "ICU"
+                ]
+            }
+        ]
+    },
+    "hip_osteoarthritis": {
+        "category": "Orthopedic",
+        "condition_name": "Hip Osteoarthritis",
+        "simple_explanation": "Wear and tear of the hip joint cartilage.",
+        "medical_explanation": "Progressive degradation of the articular cartilage of the hip joint, resulting in pain and functional limitation.",
+        "treatment_paths": [
+            {
+                "name": "Conservative Management",
+                "requires_icu": false,
+                "intensity": "Low",
+                "required_capabilities": [
+                    "Orthopedic Consultation"
+                ]
+            },
+            {
+                "name": "Hip Joint Injection",
+                "requires_icu": false,
+                "intensity": "Medium",
+                "required_capabilities": [
+                    "Orthopedic Consultation"
+                ]
+            },
+            {
+                "name": "Total Hip Replacement (THR)",
+                "requires_icu": true,
+                "intensity": "High",
+                "required_capabilities": [
+                    "Modular OT",
+                    "Orthopedic Surgery",
+                    "ICU"
+                ]
+            }
+        ]
+    },
+    "femur_fracture": {
+        "category": "Orthopedic",
+        "condition_name": "Femur Fracture",
+        "simple_explanation": "A break in the thigh bone, usually due to trauma.",
+        "medical_explanation": "A fracture of the femoral shaft, usually resulting from high-energy trauma, requiring surgical stabilization.",
+        "treatment_paths": [
+            {
+                "name": "Traction & Immobilization",
+                "requires_icu": false,
+                "intensity": "Low",
+                "required_capabilities": [
+                    "Orthopedic Ward"
+                ]
+            },
+            {
+                "name": "Intramedullary Nailing",
+                "requires_icu": false,
+                "intensity": "Medium",
+                "required_capabilities": [
+                    "Modular OT",
+                    "Orthopedic Surgery"
+                ]
+            },
+            {
+                "name": "Complex Reconstruction for Comminuted Fracture",
+                "requires_icu": true,
+                "intensity": "High",
+                "required_capabilities": [
+                    "Modular OT",
+                    "Orthopedic Surgery",
+                    "ICU"
+                ]
+            }
+        ]
+    },
+    "lumbar_disc_herniation": {
+        "category": "Orthopedic",
+        "condition_name": "Lumbar Disc Herniation",
+        "simple_explanation": "A condition where a disc between the lower back bones slips out and presses on nerves.",
+        "medical_explanation": "Displacement of the nucleus pulposus through a tear in the annulus fibrosus in the lumbar spine.",
+        "treatment_paths": [
+            {
+                "name": "Conservative Therapy & Steroid Injections",
+                "requires_icu": false,
+                "intensity": "Low",
+                "required_capabilities": [
+                    "Physiotherapy",
+                    "Spine Consultation"
+                ]
+            },
+            {
+                "name": "Microdiscectomy",
+                "requires_icu": false,
+                "intensity": "Medium",
+                "required_capabilities": [
+                    "Modular OT",
+                    "Spine Surgery"
+                ]
+            },
+            {
+                "name": "Spinal Fusion Surgery",
+                "requires_icu": true,
+                "intensity": "High",
+                "required_capabilities": [
+                    "Modular OT",
+                    "Spine Surgery",
+                    "ICU"
+                ]
+            }
+        ]
+    },
+    "acl_ligament_tear": {
+        "category": "Orthopedic",
+        "condition_name": "ACL Ligament Tear",
+        "simple_explanation": "A tear in the ligament that connects the thigh bone to the shin bone.",
+        "medical_explanation": "Rupture of the anterior cruciate ligament in the knee, often occurring during sports that involve sudden stops or changes in direction.",
+        "treatment_paths": [
+            {
+                "name": "Rehabilitative Physiotherapy",
+                "requires_icu": false,
+                "intensity": "Low",
+                "required_capabilities": [
+                    "Physiotherapy"
+                ]
+            },
+            {
+                "name": "Laparoscopic Ligament Repair",
+                "requires_icu": false,
+                "intensity": "Medium",
+                "required_capabilities": [
+                    "Laparoscopic OT",
+                    "Sports Medicine"
+                ]
+            },
+            {
+                "name": "ACL Reconstruction Surgery",
+                "requires_icu": false,
+                "intensity": "Medium",
+                "required_capabilities": [
+                    "Modular OT",
+                    "Orthopedic Surgery"
+                ]
+            }
+        ]
+    },
+    "ischemic_stroke": {
+        "category": "Neuro",
+        "condition_name": "Ischemic Stroke",
+        "simple_explanation": "A sudden interruption of blood flow to the brain, caused by a blood clot.",
+        "medical_explanation": "Cerebrovascular accident (CVA) occurring when a blood vessel supplying the brain is obstructed, leading to neuronal death and neurological deficits.",
+        "treatment_paths": [
+            {
+                "name": "Thrombolytic Therapy (tPA)",
+                "requires_icu": true,
+                "intensity": "High",
+                "required_capabilities": [
+                    "Emergency Department",
+                    "Neuro ICU",
+                    "Neurology"
+                ]
+            },
+            {
+                "name": "Mechanical Thrombectomy",
+                "requires_icu": true,
+                "intensity": "Very High",
+                "required_capabilities": [
+                    "Neuro-interventional Suite",
+                    "Neuro ICU",
+                    "Endovascular Neurosurgery"
+                ]
+            },
+            {
+                "name": "Neuro-Rehabilitation",
+                "requires_icu": false,
+                "intensity": "Medium",
+                "required_capabilities": [
+                    "Neuro-physiotherapy",
+                    "Speech Therapy"
+                ]
+            }
+        ]
+    },
+    "hemorrhagic_stroke": {
+        "category": "Neuro",
+        "condition_name": "Hemorrhagic Stroke",
+        "simple_explanation": "A stroke caused by a burst blood vessel in the brain.",
+        "medical_explanation": "Intracerebral or subarachnoid hemorrhage resulting in brain tissue damage and increased intracranial pressure.",
+        "treatment_paths": [
+            {
+                "name": "Blood Pressure Management & Monitoring",
+                "requires_icu": true,
+                "intensity": "High",
+                "required_capabilities": [
+                    "Neuro ICU",
+                    "Neurology"
+                ]
+            },
+            {
+                "name": "Craniotomy for Evacuation of Clot",
+                "requires_icu": true,
+                "intensity": "Very High",
+                "required_capabilities": [
+                    "Neuro OT",
+                    "Neuro ICU",
+                    "Neurosurgery"
+                ]
+            },
+            {
+                "name": "Endovascular Coiling for Aneurysm",
+                "requires_icu": true,
+                "intensity": "Very High",
+                "required_capabilities": [
+                    "Neuro-interventional Suite",
+                    "Neuro ICU",
+                    "Endovascular Neurosurgery"
+                ]
+            }
+        ]
+    },
+    "brain_tumor": {
+        "category": "Neuro",
+        "condition_name": "Brain Tumor",
+        "simple_explanation": "An abnormal growth of cells in the brain.",
+        "medical_explanation": "A mass or growth of abnormal cells in your brain, which can be benign (noncancerous) or malignant (cancerous).",
+        "treatment_paths": [
+            {
+                "name": "Chemotherapy & Radiation",
+                "requires_icu": false,
+                "intensity": "Medium",
+                "required_capabilities": [
+                    "Radiotherapy Center",
+                    "Oncology"
+                ]
+            },
+            {
+                "name": "Stereotactic Radiosurgery (Gamma Knife)",
+                "requires_icu": false,
+                "intensity": "High",
+                "required_capabilities": [
+                    "Radiosurgery"
+                ]
+            },
+            {
+                "name": "Surgical Resection (Craniotomy)",
+                "requires_icu": true,
+                "intensity": "Very High",
+                "required_capabilities": [
+                    "Neuro OT",
+                    "Neuro ICU",
+                    "Neurosurgery"
+                ]
+            }
+        ]
+    },
+    "epilepsy": {
+        "category": "Neuro",
+        "condition_name": "Epilepsy",
+        "simple_explanation": "A central nervous system disorder in which brain activity becomes abnormal, causing seizures.",
+        "medical_explanation": "A chronic neurological disorder characterized by recurrent unprovoked seizures.",
+        "treatment_paths": [
+            {
+                "name": "Anti-Epileptic Drug Therapy",
+                "requires_icu": false,
+                "intensity": "Low",
+                "required_capabilities": [
+                    "Neurology Consultation"
+                ]
+            },
+            {
+                "name": "Vagus Nerve Stimulation",
+                "requires_icu": false,
+                "intensity": "Medium",
+                "required_capabilities": [
+                    "Neuro OT",
+                    "Neurosurgery"
+                ]
+            },
+            {
+                "name": "Epilepsy Surgery (Temporal Lobectomy)",
+                "requires_icu": true,
+                "intensity": "Very High",
+                "required_capabilities": [
+                    "Neuro OT",
+                    "Neuro ICU",
+                    "Neurosurgery"
+                ]
+            }
+        ]
+    },
+    "parkinsons_disease": {
+        "category": "Neuro",
+        "condition_name": "Parkinson's Disease",
+        "simple_explanation": "A progressive nervous system disorder that affects movement.",
+        "medical_explanation": "A chronic and progressive movement disorder that involves the malfunction and death of vital nerve cells in the brain.",
+        "treatment_paths": [
+            {
+                "name": "Levodopa & Dopaminergic Therapy",
+                "requires_icu": false,
+                "intensity": "Low",
+                "required_capabilities": [
+                    "Neurology Consultation"
+                ]
+            },
+            {
+                "name": "Physical and Occupational Therapy",
+                "requires_icu": false,
+                "intensity": "Low",
+                "required_capabilities": [
+                    "Rehabilitation Unit"
+                ]
+            },
+            {
+                "name": "Deep Brain Stimulation (DBS)",
+                "requires_icu": true,
+                "intensity": "Very High",
+                "required_capabilities": [
+                    "Neuro OT",
+                    "Neuro ICU",
+                    "Stereotactic Neurosurgery"
+                ]
+            }
+        ]
+    },
+    "appendicitis": {
+        "category": "General Surgery",
+        "condition_name": "Appendicitis",
+        "simple_explanation": "Inflammation of the appendix, often requiring surgical removal.",
+        "medical_explanation": "Acute inflammation of the vermiform appendix, typically presenting with periumbilical pain radiating to the right lower quadrant, requiring prompt surgical intervention to prevent rupture.",
+        "treatment_paths": [
+            {
+                "name": "Laparoscopic Appendectomy",
+                "requires_icu": false,
+                "intensity": "Medium",
+                "required_capabilities": [
+                    "Laparoscopic OT",
+                    "General Surgery"
+                ]
+            },
+            {
+                "name": "Open Appendectomy",
+                "requires_icu": false,
+                "intensity": "High",
+                "required_capabilities": [
+                    "General OT",
+                    "General Surgery"
+                ]
+            },
+            {
+                "name": "Medical Management (Antibiotics)",
+                "requires_icu": false,
+                "intensity": "Low",
+                "required_capabilities": [
+                    "General Medicine"
+                ]
+            }
+        ]
+    },
+    "gallstones": {
+        "category": "General Surgery",
+        "condition_name": "Gallstones",
+        "simple_explanation": "Hardened deposits of digestive fluid that can form in your gallbladder.",
+        "medical_explanation": "Cholelithiasis, the presence of stones in the gallbladder, which can cause biliary colic or cholecystitis.",
+        "treatment_paths": [
+            {
+                "name": "Expectant Management",
+                "requires_icu": false,
+                "intensity": "Low",
+                "required_capabilities": [
+                    "General Medicine"
+                ]
+            },
+            {
+                "name": "Laparoscopic Cholecystectomy",
+                "requires_icu": false,
+                "intensity": "Medium",
+                "required_capabilities": [
+                    "Laparoscopic OT",
+                    "General Surgery"
+                ]
+            },
+            {
+                "name": "Endoscopic Retrograde Cholangiopancreatography (ERCP)",
+                "requires_icu": false,
+                "intensity": "Medium",
+                "required_capabilities": [
+                    "Endoscopy Suite",
+                    "Gastroenterology"
+                ]
+            }
+        ]
+    },
+    "inguinal_hernia": {
+        "category": "General Surgery",
+        "condition_name": "Inguinal Hernia",
+        "simple_explanation": "A condition in which soft tissue bulges through a weak point in the abdominal muscles.",
+        "medical_explanation": "Protrusion of abdominal cavity contents through the inguinal canal.",
+        "treatment_paths": [
+            {
+                "name": "Watchful Waiting",
+                "requires_icu": false,
+                "intensity": "Low",
+                "required_capabilities": [
+                    "General Surgery Consultation"
+                ]
+            },
+            {
+                "name": "Open Hernia Repair",
+                "requires_icu": false,
+                "intensity": "Medium",
+                "required_capabilities": [
+                    "General OT",
+                    "General Surgery"
+                ]
+            },
+            {
+                "name": "Laparoscopic Hernia Repair",
+                "requires_icu": false,
+                "intensity": "Medium",
+                "required_capabilities": [
+                    "Laparoscopic OT",
+                    "General Surgery"
+                ]
+            }
+        ]
+    },
+    "piles_hemorrhoids": {
+        "category": "General Surgery",
+        "condition_name": "Piles / Hemorrhoids",
+        "simple_explanation": "Swollen and inflamed veins in the rectum and anus that cause discomfort and bleeding.",
+        "medical_explanation": "Vascular structures in the anal canal which help with stool control, becoming pathological when swollen or inflamed.",
+        "treatment_paths": [
+            {
+                "name": "Conservative Treatments (Fiber & Ointments)",
+                "requires_icu": false,
+                "intensity": "Low",
+                "required_capabilities": [
+                    "General Medicine"
+                ]
+            },
+            {
+                "name": "Rubber Band Ligation",
+                "requires_icu": false,
+                "intensity": "Low",
+                "required_capabilities": [
+                    "General OT"
+                ]
+            },
+            {
+                "name": "Hemorrhoidectomy (Surgical Removal)",
+                "requires_icu": false,
+                "intensity": "Medium",
+                "required_capabilities": [
+                    "General OT",
+                    "General Surgery"
+                ]
+            }
+        ]
+    },
+    "thyroid_nodule": {
+        "category": "General Surgery",
+        "condition_name": "Thyroid Nodule",
+        "simple_explanation": "Abnormal lumps that form in your thyroid gland.",
+        "medical_explanation": "Lumps in the thyroid gland which can be solid or fluid-filled; most are benign, but a small percentage are cancerous.",
+        "treatment_paths": [
+            {
+                "name": "Monitoring & Fine-Needle Aspiration",
+                "requires_icu": false,
+                "intensity": "Low",
+                "required_capabilities": [
+                    "Radiology"
+                ]
+            },
+            {
+                "name": "Thyroidectomy (Partial or Total Removal)",
+                "requires_icu": true,
+                "intensity": "High",
+                "required_capabilities": [
+                    "General OT",
+                    "General / ENT Surgery",
+                    "ICU"
+                ]
+            },
+            {
+                "name": "Radioactive Iodine Therapy",
+                "requires_icu": false,
+                "intensity": "Medium",
+                "required_capabilities": [
+                    "Nuclear Medicine Unit"
+                ]
+            }
+        ]
+    }
+}

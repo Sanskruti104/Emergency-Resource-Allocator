@@ -1,0 +1,35 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "conditionCategory": {
+            "type": "string"
+        },
+        "conditionName": {
+            "type": "string"
+        },
+        "selectedTreatment": {
+            "type": "string"
+        },
+        "requiresICU": {
+            "type": "boolean"
+        },
+        "resourceIntensity": {
+            "type": "string",
+            "enum": [
+                "Low",
+                "Medium",
+                "High",
+                "Very High"
+            ]
+        }
+    },
+    "required": [
+        "conditionCategory",
+        "conditionName",
+        "selectedTreatment",
+        "requiresICU",
+        "resourceIntensity"
+    ],
+    "additionalProperties": false
+}

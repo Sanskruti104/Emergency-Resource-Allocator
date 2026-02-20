@@ -1,0 +1,219 @@
+{
+    "coronary_artery_disease": [
+        "heart blockage",
+        "clogged arteries",
+        "narrowed heart vessels",
+        "blocked heart pipes",
+        "heart blood flow problem",
+        "coronary block",
+        "heart artery disease",
+        "poor heart circulation",
+        "chest pain on exertion",
+        "tightness in chest heart"
+    ],
+    "heart_failure": [
+        "heart weak",
+        "cant breathe well",
+        "fluid in lungs",
+        "congestive heart",
+        "swollen legs heart",
+        "heart pump failure",
+        "short of breath heart",
+        "panting after stairs",
+        "cannot lie flat to sleep",
+        "fatigue and breathless"
+    ],
+    "cardiac_arrhythmia": [
+        "irregular heartbeat",
+        "heart racing",
+        "heart skipping beats",
+        "palpitations",
+        "fluttering in chest",
+        "heart rhythm problem",
+        "fast heart rate",
+        "thumping in chest",
+        "uneven heart beat"
+    ],
+    "valvular_heart_disease": [
+        "heart valve problem",
+        "leaky valve",
+        "heart murmur",
+        "stiff valve",
+        "valve calcification",
+        "clicking heart",
+        "damaged valve",
+        "leaking heart valve",
+        "heart valve narrowing"
+    ],
+    "cardiomyopathy": [
+        "heart muscle disease",
+        "enlarged heart",
+        "thick heart muscle",
+        "weak heart wall",
+        "cardiomyopathy",
+        "heart structure problem",
+        "diseased heart muscle",
+        "stiff heart muscle"
+    ],
+    "knee_osteoarthritis": [
+        "knee bone on bone",
+        "knee joint wear",
+        "knee arthritis",
+        "worn out knee",
+        "knee cartilage damage",
+        "knee joint stiffness",
+        "degenerative knee",
+        "knee joint pain",
+        "knee grinding sound",
+        "creaky knees"
+    ],
+    "hip_osteoarthritis": [
+        "hip joint pain",
+        "hip arthritis",
+        "hip bone on bone",
+        "stiff hip joint",
+        "hip cartilage wear",
+        "groin pain hip",
+        "worn out hip",
+        "limping from hip pain"
+    ],
+    "femur_fracture": [
+        "broken thigh bone",
+        "femur break",
+        "fractured leg bone",
+        "hip area fracture",
+        "snapped thigh bone",
+        "leg bone crack",
+        "broken femur",
+        "thigh bone snapping"
+    ],
+    "lumbar_disc_herniation": [
+        "slipped disc back",
+        "sciatica pain",
+        "disc bulge lower back",
+        "pinched nerve back",
+        "herniated lumbar disc",
+        "back disc problem",
+        "nerve pain in back",
+        "shooting pain down leg",
+        "numbness in lower back"
+    ],
+    "acl_ligament_tear": [
+        "torn acl",
+        "knee ligament snap",
+        "knee pop injury",
+        "torn ligament knee",
+        "acl rupture",
+        "sports knee injury",
+        "knee ligament tear",
+        "knee buckling after injury",
+        "giving way of knee"
+    ],
+    "ischemic_stroke": [
+        "brain attack",
+        "blood clot in brain",
+        "sudden brain numbness",
+        "brain blockage",
+        "clot in head",
+        "stroke from clot",
+        "blocked brain vessel",
+        "ischemic event",
+        "face drooping one side",
+        "slurred speech sudden"
+    ],
+    "hemorrhagic_stroke": [
+        "brain bleed",
+        "burst vessel brain",
+        "bleeding in head",
+        "head hemorrhage",
+        "brain vessel snap",
+        "hemorrhagic event",
+        "bleeding brain stroke",
+        "worst headache of life",
+        "sudden brain bleed"
+    ],
+    "brain_tumor": [
+        "growth in brain",
+        "brain mass",
+        "tumor in head",
+        "brain lesion",
+        "abnormal brain cells",
+        "space occupying lesion brain",
+        "mass in skull",
+        "persistent morning headache",
+        "unexplained seizures tumor"
+    ],
+    "epilepsy": [
+        "seizures",
+        "fits",
+        "electric storm brain",
+        "convulsing",
+        "falling down seizures",
+        "epilepsy disorder",
+        "shaking seizures",
+        "jerking of limbs"
+    ],
+    "parkinsons_disease": [
+        "shaking hands",
+        "tremors",
+        "stiffness in movement",
+        "parkinsons",
+        "slow walking shaking",
+        "movement disorder brain",
+        "parkinson shuffles",
+        "resting tremor hands"
+    ],
+    "appendicitis": [
+        "appendix pain",
+        "stomach pain right side",
+        "swollen appendix",
+        "burst appendix",
+        "appendix inflammation",
+        "lower right belly pain",
+        "right side abdomen pain",
+        "inflamed appendix",
+        "pain moving to lower right",
+        "rebound belly pain"
+    ],
+    "gallstones": [
+        "gallbladder stones",
+        "gall bladder pain",
+        "stones in gall",
+        "sharp pain after meal",
+        "bile duct blockage",
+        "cholecystitis pain",
+        "gallbladder stones problem",
+        "pain under right ribs"
+    ],
+    "inguinal_hernia": [
+        "groin bulge",
+        "hernia in groin",
+        "abdominal wall weakness",
+        "pop in groin area",
+        "inguinal swelling",
+        "bowel bulge groin",
+        "groin lump hernia",
+        "pain when coughing groin"
+    ],
+    "piles_hemorrhoids": [
+        "piles",
+        "hemorrhoids",
+        "bleeding during stool",
+        "anal swelling pain",
+        "itching in anus",
+        "swollen rectal veins",
+        "internal piles",
+        "pain when sitting down",
+        "blood after pooping"
+    ],
+    "thyroid_nodule": [
+        "neck lump thyroid",
+        "swollen thyroid gland",
+        "nodule on neck",
+        "thyroid growth",
+        "mass in throat thyroid",
+        "thyroid swelling",
+        "lump in thyroid",
+        "difficulty swallowing thyroid"
+    ]
+}
