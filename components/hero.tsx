@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, Users, Search } from "lucide-react"
 
 export function Hero() {
   return (
@@ -45,6 +45,17 @@ export function Hero() {
             className="h-12 rounded-full px-10 text-base text-muted-foreground hover:text-foreground"
           >
             <Link href="/profile">Plan My Treatment</Link>
+          </Button>
+          <Button
+            asChild
+            variant="outline"
+            size="lg"
+            className="h-12 rounded-full px-10 text-base border-primary/20 hover:bg-primary/5 hover:text-primary transition-all duration-300 gap-2"
+          >
+            <Link href="/doctors/search">
+              <Search className="h-4 w-4" />
+              Search Doctors
+            </Link>
           </Button>
         </div>
       </div>

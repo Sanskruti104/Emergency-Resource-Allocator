@@ -10,7 +10,9 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
-import { Loader2, Save, Building2, MapPin, Phone, Award, ShieldCheck } from "lucide-react"
+import { Loader2, Save, Building2, MapPin, Phone, Award, ShieldCheck, Stethoscope } from "lucide-react"
+import { InstrumentModule } from "@/components/hospital/instrument-module"
+import { InstrumentStatus } from "@/lib/instrument-intelligence"
 
 const profileSchema = z.object({
     hospitalName: z.string().min(3, "Hospital name must be at least 3 characters"),
@@ -22,6 +24,11 @@ const profileSchema = z.object({
     licenseNumber: z.string().min(5, "License number is required"),
     insuranceAccepted: z.string().optional(), // We'll process this as an array
     governmentSchemes: z.string().optional(), // We'll process this as an array
+    instruments: z.object({
+        available: z.array(z.string()),
+        last_verified: z.string(),
+        confidence: z.enum(["high", "medium", "low"])
+    }).optional()
 })
 
 type ProfileFormValues = z.infer<typeof profileSchema>
@@ -36,10 +43,21 @@ export default function HospitalProfilePage() {
         register,
         handleSubmit,
         reset,
+        watch,
+        setValue,
         formState: { errors },
     } = useForm<ProfileFormValues>({
         resolver: zodResolver(profileSchema),
+        defaultValues: {
+            instruments: {
+                available: [],
+                last_verified: new Date().toISOString().split('T')[0],
+                confidence: "high"
+            }
+        }
     })
+
+    const selectedInstruments = watch("instruments.available") || []
 
     useEffect(() => {
         async function fetchProfile() {
@@ -60,6 +78,11 @@ export default function HospitalProfilePage() {
                         ...data,
                         insuranceAccepted: data.insuranceAccepted?.join(", ") || "",
                         governmentSchemes: data.governmentSchemes?.join(", ") || "",
+                        instruments: data.instruments || {
+                            available: [],
+                            last_verified: new Date().toISOString().split('T')[0],
+                            confidence: "high"
+                        }
                     })
                 }
             } catch (error: any) {
@@ -79,6 +102,10 @@ export default function HospitalProfilePage() {
                 ...data,
                 insuranceAccepted: data.insuranceAccepted ? data.insuranceAccepted.split(",").map(i => i.trim()).filter(Boolean) : [],
                 governmentSchemes: data.governmentSchemes ? data.governmentSchemes.split(",").map(i => i.trim()).filter(Boolean) : [],
+                instruments: {
+                    ...data.instruments,
+                    last_verified: new Date().toISOString().split('T')[0]
+                }
             }
 
             const method = isNewProfile ? "POST" : "PUT"
@@ -212,6 +239,11 @@ export default function HospitalProfilePage() {
                         </div>
                     </CardContent>
                 </Card>
+
+                <InstrumentModule
+                    selectedInstruments={selectedInstruments}
+                    onChange={(val) => setValue("instruments.available", val, { shouldDirty: true })}
+                />
 
                 <div className="flex items-center justify-end gap-4">
                     <Button type="button" variant="outline" className="rounded-xl" onClick={() => router.back()}>

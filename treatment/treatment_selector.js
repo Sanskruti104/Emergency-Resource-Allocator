@@ -43,7 +43,9 @@ function buildStructuredOutput(conditionKey) {
         conditionName: condition.condition_name,
         selectedTreatment: selectedPath.name,
         requiresICU: selectedPath.requires_icu,
-        resourceIntensity: selectedPath.intensity
+        resourceIntensity: selectedPath.intensity,
+        // Internal-use metadata: Required instruments for clinical validation
+        requiredInstruments: selectedPath.required_instruments || []
     };
 }
 

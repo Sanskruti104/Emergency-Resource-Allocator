@@ -12,7 +12,9 @@ import {
     ChevronRight,
     LogOut,
     ShieldCheck,
-    Building2
+    Building2,
+    Microscope,
+    Users
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useState } from "react"
@@ -21,7 +23,9 @@ import { Button } from "@/components/ui/button"
 const menuItems = [
     { title: "Dashboard Overview", icon: LayoutDashboard, href: "/hospital/dashboard" },
     { title: "Hospital Profile", icon: UserRound, href: "/hospital/profile" },
+    { title: "Visiting Doctors", icon: Users, href: "/hospital/doctors" },
     { title: "Capacity Management", icon: Activity, href: "/hospital/capacity" },
+    { title: "Instruments & Equipment", icon: Microscope, href: "/hospital/instruments" },
     { title: "Treatments & Pricing", icon: Stethoscope, href: "/hospital/treatments" },
     { title: "Insurance Intelligence", icon: ShieldCheck, href: "/hospital/insurance" },
     { title: "Hospital Public Profile", icon: Building2, href: "/hospital/about" },

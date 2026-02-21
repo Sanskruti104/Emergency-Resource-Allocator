@@ -27,18 +27,14 @@ import {
 } from "lucide-react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import {
-    Radar,
-    RadarChart,
-    PolarGrid,
-    PolarAngleAxis,
-    ResponsiveContainer,
-    PolarRadiusAxis
-} from "recharts";
-
 const MiniMap = dynamic(() => import("@/components/map/mini-map"), {
     ssr: false,
     loading: () => <Skeleton className="h-full w-full rounded-2xl" />
+});
+
+const RatingChart = dynamic(() => import("@/components/hospital-detail/rating-chart"), {
+    ssr: false,
+    loading: () => <div className="h-[300px] w-full bg-white/5 animate-pulse rounded-3xl" />
 });
 
 interface HospitalDetail {
@@ -266,26 +262,12 @@ export default function HospitalDetailPage() {
 
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
                                         {/* Chart */}
-                                        <div className="h-[300px] w-full bg-white/5 rounded-3xl p-4">
-                                            <ResponsiveContainer width="100%" height="100%">
-                                                <RadarChart cx="50%" cy="50%" outerRadius="80%" data={[
-                                                    { subject: 'Infra', A: hospital.rating.radarData.infrastructure, fullMark: 100 },
-                                                    { subject: 'Usage', A: hospital.rating.radarData.utilization, fullMark: 100 },
-                                                    { subject: 'Gov', A: hospital.rating.radarData.governance, fullMark: 100 },
-                                                    { subject: 'Scope', A: hospital.rating.radarData.clinicalCoverage, fullMark: 100 },
-                                                ]}>
-                                                    <PolarGrid stroke="#334155" />
-                                                    <PolarAngleAxis dataKey="subject" tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 'bold' }} />
-                                                    <Radar
-                                                        name="Hospital"
-                                                        dataKey="A"
-                                                        stroke="#0ea5e9"
-                                                        fill="#0ea5e9"
-                                                        fillOpacity={0.5}
-                                                    />
-                                                </RadarChart>
-                                            </ResponsiveContainer>
-                                        </div>
+                                        <RatingChart data={[
+                                            { subject: 'Infra', A: hospital.rating.radarData.infrastructure, fullMark: 100 },
+                                            { subject: 'Usage', A: hospital.rating.radarData.utilization, fullMark: 100 },
+                                            { subject: 'Gov', A: hospital.rating.radarData.governance, fullMark: 100 },
+                                            { subject: 'Scope', A: hospital.rating.radarData.clinicalCoverage, fullMark: 100 },
+                                        ]} />
 
                                         {/* Explanations & Confidence */}
                                         <div className="space-y-6">

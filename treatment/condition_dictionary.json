@@ -12,7 +12,8 @@
                 "required_capabilities": [
                     "Primary Care",
                     "Cardiology Consultation"
-                ]
+                ],
+                "required_instruments": []
             },
             {
                 "name": "Angioplasty and Stenting (PCI)",
@@ -22,6 +23,13 @@
                     "Cath Lab",
                     "Cardiac ICU",
                     "Interventional Cardiology"
+                ],
+                "required_instruments": [
+                    "cath_lab_system",
+                    "icu_monitor",
+                    "ventilator",
+                    "oxygen_supply",
+                    "ecg_monitor"
                 ]
             },
             {
@@ -32,6 +40,13 @@
                     "Cardiac OT",
                     "Cardiac ICU",
                     "Cardiothoracic Surgery"
+                ],
+                "required_instruments": [
+                    "anesthesia_workstation",
+                    "icu_monitor",
+                    "ecg_monitor",
+                    "ventilator",
+                    "oxygen_supply"
                 ]
             }
         ]
@@ -48,7 +63,8 @@
                 "intensity": "Low",
                 "required_capabilities": [
                     "Cardiology Consultation"
-                ]
+                ],
+                "required_instruments": []
             },
             {
                 "name": "Cardiac Resynchronization Therapy (CRT)",
@@ -58,6 +74,12 @@
                     "EP Lab",
                     "Electrophysiology",
                     "Cardiac ICU"
+                ],
+                "required_instruments": [
+                    "icu_monitor",
+                    "ventilator",
+                    "oxygen_supply",
+                    "ecg_monitor"
                 ]
             },
             {
@@ -67,6 +89,13 @@
                 "required_capabilities": [
                     "Cardiac OT",
                     "Cardiac ICU"
+                ],
+                "required_instruments": [
+                    "anesthesia_workstation",
+                    "icu_monitor",
+                    "ecg_monitor",
+                    "ventilator",
+                    "oxygen_supply"
                 ]
             }
         ]
@@ -83,7 +112,8 @@
                 "intensity": "Low",
                 "required_capabilities": [
                     "Cardiology Consultation"
-                ]
+                ],
+                "required_instruments": []
             },
             {
                 "name": "Radiofrequency Ablation",
@@ -92,7 +122,8 @@
                 "required_capabilities": [
                     "EP Lab",
                     "Electrophysiology"
-                ]
+                ],
+                "required_instruments": []
             },
             {
                 "name": "Pacemaker/ICD Implantation",
@@ -102,6 +133,13 @@
                     "Cath Lab",
                     "Electrophysiology",
                     "Cardiac ICU"
+                ],
+                "required_instruments": [
+                    "cath_lab_system",
+                    "icu_monitor",
+                    "ventilator",
+                    "oxygen_supply",
+                    "ecg_monitor"
                 ]
             }
         ]
@@ -119,6 +157,9 @@
                 "required_capabilities": [
                     "Cath Lab",
                     "Interventional Cardiology"
+                ],
+                "required_instruments": [
+                    "cath_lab_system"
                 ]
             },
             {
@@ -129,6 +170,14 @@
                     "Cardiac OT",
                     "Cath Lab",
                     "Cardiac ICU"
+                ],
+                "required_instruments": [
+                    "anesthesia_workstation",
+                    "icu_monitor",
+                    "ecg_monitor",
+                    "cath_lab_system",
+                    "ventilator",
+                    "oxygen_supply"
                 ]
             },
             {
@@ -139,6 +188,13 @@
                     "Cardiac OT",
                     "Cardiac ICU",
                     "Cardiothoracic Surgery"
+                ],
+                "required_instruments": [
+                    "anesthesia_workstation",
+                    "icu_monitor",
+                    "ecg_monitor",
+                    "ventilator",
+                    "oxygen_supply"
                 ]
             }
         ]
@@ -155,7 +211,8 @@
                 "intensity": "Low",
                 "required_capabilities": [
                     "Cardiology Consultation"
-                ]
+                ],
+                "required_instruments": []
             },
             {
                 "name": "Alcohol Septal Ablation",
@@ -164,6 +221,9 @@
                 "required_capabilities": [
                     "Cath Lab",
                     "Interventional Cardiology"
+                ],
+                "required_instruments": [
+                    "cath_lab_system"
                 ]
             },
             {
@@ -174,6 +234,13 @@
                     "Cardiac OT",
                     "Cardiac ICU",
                     "Cardiothoracic Surgery"
+                ],
+                "required_instruments": [
+                    "anesthesia_workstation",
+                    "icu_monitor",
+                    "ecg_monitor",
+                    "ventilator",
+                    "oxygen_supply"
                 ]
             }
         ]
@@ -191,7 +258,8 @@
                 "required_capabilities": [
                     "Physiotherapy",
                     "Orthopedic Consultation"
-                ]
+                ],
+                "required_instruments": []
             },
             {
                 "name": "Arthroscopic Surgery",
@@ -200,7 +268,8 @@
                 "required_capabilities": [
                     "Daycare Surgery",
                     "Orthopedic Surgery"
-                ]
+                ],
+                "required_instruments": []
             },
             {
                 "name": "Total Knee Replacement (TKR)",
@@ -210,6 +279,12 @@
                     "Modular OT",
                     "Orthopedic Specialization",
                     "ICU"
+                ],
+                "required_instruments": [
+                    "anesthesia_workstation",
+                    "icu_monitor",
+                    "ventilator",
+                    "oxygen_supply"
                 ]
             }
         ]
@@ -226,7 +301,8 @@
                 "intensity": "Low",
                 "required_capabilities": [
                     "Orthopedic Consultation"
-                ]
+                ],
+                "required_instruments": []
             },
             {
                 "name": "Hip Joint Injection",
@@ -234,7 +310,8 @@
                 "intensity": "Medium",
                 "required_capabilities": [
                     "Orthopedic Consultation"
-                ]
+                ],
+                "required_instruments": []
             },
             {
                 "name": "Total Hip Replacement (THR)",
@@ -244,6 +321,12 @@
                     "Modular OT",
                     "Orthopedic Surgery",
                     "ICU"
+                ],
+                "required_instruments": [
+                    "anesthesia_workstation",
+                    "icu_monitor",
+                    "ventilator",
+                    "oxygen_supply"
                 ]
             }
         ]
@@ -260,7 +343,8 @@
                 "intensity": "Low",
                 "required_capabilities": [
                     "Orthopedic Ward"
-                ]
+                ],
+                "required_instruments": []
             },
             {
                 "name": "Intramedullary Nailing",
@@ -269,6 +353,9 @@
                 "required_capabilities": [
                     "Modular OT",
                     "Orthopedic Surgery"
+                ],
+                "required_instruments": [
+                    "anesthesia_workstation"
                 ]
             },
             {
@@ -279,6 +366,12 @@
                     "Modular OT",
                     "Orthopedic Surgery",
                     "ICU"
+                ],
+                "required_instruments": [
+                    "anesthesia_workstation",
+                    "icu_monitor",
+                    "ventilator",
+                    "oxygen_supply"
                 ]
             }
         ]
@@ -296,7 +389,8 @@
                 "required_capabilities": [
                     "Physiotherapy",
                     "Spine Consultation"
-                ]
+                ],
+                "required_instruments": []
             },
             {
                 "name": "Microdiscectomy",
@@ -305,6 +399,9 @@
                 "required_capabilities": [
                     "Modular OT",
                     "Spine Surgery"
+                ],
+                "required_instruments": [
+                    "anesthesia_workstation"
                 ]
             },
             {
@@ -315,6 +412,12 @@
                     "Modular OT",
                     "Spine Surgery",
                     "ICU"
+                ],
+                "required_instruments": [
+                    "anesthesia_workstation",
+                    "icu_monitor",
+                    "ventilator",
+                    "oxygen_supply"
                 ]
             }
         ]
@@ -331,7 +434,8 @@
                 "intensity": "Low",
                 "required_capabilities": [
                     "Physiotherapy"
-                ]
+                ],
+                "required_instruments": []
             },
             {
                 "name": "Laparoscopic Ligament Repair",
@@ -340,6 +444,10 @@
                 "required_capabilities": [
                     "Laparoscopic OT",
                     "Sports Medicine"
+                ],
+                "required_instruments": [
+                    "anesthesia_workstation",
+                    "endoscopy_unit"
                 ]
             },
             {
@@ -349,6 +457,9 @@
                 "required_capabilities": [
                     "Modular OT",
                     "Orthopedic Surgery"
+                ],
+                "required_instruments": [
+                    "anesthesia_workstation"
                 ]
             }
         ]
@@ -367,6 +478,13 @@
                     "Emergency Department",
                     "Neuro ICU",
                     "Neurology"
+                ],
+                "required_instruments": [
+                    "defibrillator",
+                    "ecg_monitor",
+                    "oxygen_supply",
+                    "icu_monitor",
+                    "ventilator"
                 ]
             },
             {
@@ -377,6 +495,13 @@
                     "Neuro-interventional Suite",
                     "Neuro ICU",
                     "Endovascular Neurosurgery"
+                ],
+                "required_instruments": [
+                    "ct_scanner",
+                    "anesthesia_workstation",
+                    "icu_monitor",
+                    "ventilator",
+                    "oxygen_supply"
                 ]
             },
             {
@@ -386,7 +511,8 @@
                 "required_capabilities": [
                     "Neuro-physiotherapy",
                     "Speech Therapy"
-                ]
+                ],
+                "required_instruments": []
             }
         ]
     },
@@ -403,6 +529,11 @@
                 "required_capabilities": [
                     "Neuro ICU",
                     "Neurology"
+                ],
+                "required_instruments": [
+                    "icu_monitor",
+                    "ventilator",
+                    "oxygen_supply"
                 ]
             },
             {
@@ -413,6 +544,12 @@
                     "Neuro OT",
                     "Neuro ICU",
                     "Neurosurgery"
+                ],
+                "required_instruments": [
+                    "anesthesia_workstation",
+                    "icu_monitor",
+                    "ventilator",
+                    "oxygen_supply"
                 ]
             },
             {
@@ -423,6 +560,13 @@
                     "Neuro-interventional Suite",
                     "Neuro ICU",
                     "Endovascular Neurosurgery"
+                ],
+                "required_instruments": [
+                    "ct_scanner",
+                    "anesthesia_workstation",
+                    "icu_monitor",
+                    "ventilator",
+                    "oxygen_supply"
                 ]
             }
         ]
@@ -440,7 +584,8 @@
                 "required_capabilities": [
                     "Radiotherapy Center",
                     "Oncology"
-                ]
+                ],
+                "required_instruments": []
             },
             {
                 "name": "Stereotactic Radiosurgery (Gamma Knife)",
@@ -448,7 +593,8 @@
                 "intensity": "High",
                 "required_capabilities": [
                     "Radiosurgery"
-                ]
+                ],
+                "required_instruments": []
             },
             {
                 "name": "Surgical Resection (Craniotomy)",
@@ -458,6 +604,12 @@
                     "Neuro OT",
                     "Neuro ICU",
                     "Neurosurgery"
+                ],
+                "required_instruments": [
+                    "anesthesia_workstation",
+                    "icu_monitor",
+                    "ventilator",
+                    "oxygen_supply"
                 ]
             }
         ]
@@ -474,7 +626,8 @@
                 "intensity": "Low",
                 "required_capabilities": [
                     "Neurology Consultation"
-                ]
+                ],
+                "required_instruments": []
             },
             {
                 "name": "Vagus Nerve Stimulation",
@@ -483,6 +636,10 @@
                 "required_capabilities": [
                     "Neuro OT",
                     "Neurosurgery"
+                ],
+                "required_instruments": [
+                    "anesthesia_workstation",
+                    "icu_monitor"
                 ]
             },
             {
@@ -493,6 +650,12 @@
                     "Neuro OT",
                     "Neuro ICU",
                     "Neurosurgery"
+                ],
+                "required_instruments": [
+                    "anesthesia_workstation",
+                    "icu_monitor",
+                    "ventilator",
+                    "oxygen_supply"
                 ]
             }
         ]
@@ -509,7 +672,8 @@
                 "intensity": "Low",
                 "required_capabilities": [
                     "Neurology Consultation"
-                ]
+                ],
+                "required_instruments": []
             },
             {
                 "name": "Physical and Occupational Therapy",
@@ -517,7 +681,8 @@
                 "intensity": "Low",
                 "required_capabilities": [
                     "Rehabilitation Unit"
-                ]
+                ],
+                "required_instruments": []
             },
             {
                 "name": "Deep Brain Stimulation (DBS)",
@@ -527,6 +692,12 @@
                     "Neuro OT",
                     "Neuro ICU",
                     "Stereotactic Neurosurgery"
+                ],
+                "required_instruments": [
+                    "anesthesia_workstation",
+                    "icu_monitor",
+                    "ventilator",
+                    "oxygen_supply"
                 ]
             }
         ]
@@ -544,6 +715,10 @@
                 "required_capabilities": [
                     "Laparoscopic OT",
                     "General Surgery"
+                ],
+                "required_instruments": [
+                    "anesthesia_workstation",
+                    "endoscopy_unit"
                 ]
             },
             {
@@ -553,6 +728,9 @@
                 "required_capabilities": [
                     "General OT",
                     "General Surgery"
+                ],
+                "required_instruments": [
+                    "anesthesia_workstation"
                 ]
             },
             {
@@ -561,7 +739,8 @@
                 "intensity": "Low",
                 "required_capabilities": [
                     "General Medicine"
-                ]
+                ],
+                "required_instruments": []
             }
         ]
     },
@@ -577,7 +756,8 @@
                 "intensity": "Low",
                 "required_capabilities": [
                     "General Medicine"
-                ]
+                ],
+                "required_instruments": []
             },
             {
                 "name": "Laparoscopic Cholecystectomy",
@@ -586,6 +766,10 @@
                 "required_capabilities": [
                     "Laparoscopic OT",
                     "General Surgery"
+                ],
+                "required_instruments": [
+                    "anesthesia_workstation",
+                    "endoscopy_unit"
                 ]
             },
             {
@@ -595,6 +779,9 @@
                 "required_capabilities": [
                     "Endoscopy Suite",
                     "Gastroenterology"
+                ],
+                "required_instruments": [
+                    "endoscopy_unit"
                 ]
             }
         ]
@@ -611,7 +798,8 @@
                 "intensity": "Low",
                 "required_capabilities": [
                     "General Surgery Consultation"
-                ]
+                ],
+                "required_instruments": []
             },
             {
                 "name": "Open Hernia Repair",
@@ -620,6 +808,9 @@
                 "required_capabilities": [
                     "General OT",
                     "General Surgery"
+                ],
+                "required_instruments": [
+                    "anesthesia_workstation"
                 ]
             },
             {
@@ -629,6 +820,10 @@
                 "required_capabilities": [
                     "Laparoscopic OT",
                     "General Surgery"
+                ],
+                "required_instruments": [
+                    "anesthesia_workstation",
+                    "endoscopy_unit"
                 ]
             }
         ]
@@ -645,7 +840,8 @@
                 "intensity": "Low",
                 "required_capabilities": [
                     "General Medicine"
-                ]
+                ],
+                "required_instruments": []
             },
             {
                 "name": "Rubber Band Ligation",
@@ -653,6 +849,9 @@
                 "intensity": "Low",
                 "required_capabilities": [
                     "General OT"
+                ],
+                "required_instruments": [
+                    "anesthesia_workstation"
                 ]
             },
             {
@@ -662,6 +861,9 @@
                 "required_capabilities": [
                     "General OT",
                     "General Surgery"
+                ],
+                "required_instruments": [
+                    "anesthesia_workstation"
                 ]
             }
         ]
@@ -678,6 +880,9 @@
                 "intensity": "Low",
                 "required_capabilities": [
                     "Radiology"
+                ],
+                "required_instruments": [
+                    "ct_scanner"
                 ]
             },
             {
@@ -688,6 +893,12 @@
                     "General OT",
                     "General / ENT Surgery",
                     "ICU"
+                ],
+                "required_instruments": [
+                    "anesthesia_workstation",
+                    "icu_monitor",
+                    "ventilator",
+                    "oxygen_supply"
                 ]
             },
             {
@@ -696,7 +907,8 @@
                 "intensity": "Medium",
                 "required_capabilities": [
                     "Nuclear Medicine Unit"
-                ]
+                ],
+                "required_instruments": []
             }
         ]
     }

@@ -1,0 +1,74 @@
+{
+    "angioplasty": {
+        "required": [
+            "cath_lab",
+            "ecg",
+            "icu_monitor"
+        ],
+        "optional": [
+            "ventilator",
+            "ct_scan"
+        ]
+    },
+    "brain_tumor_surgery": {
+        "required": [
+            "mri",
+            "anesthesia",
+            "icu_monitor"
+        ],
+        "optional": [
+            "ct_scan",
+            "ventilator"
+        ]
+    },
+    "covid_critical": {
+        "required": [
+            "ventilator",
+            "oxygen",
+            "icu_monitor"
+        ],
+        "optional": [
+            "xray",
+            "ecg"
+        ]
+    },
+    "fracture_repair": {
+        "required": [
+            "xray",
+            "anesthesia"
+        ],
+        "optional": [
+            "orthopedic_tools",
+            "ultrasound"
+        ]
+    },
+    "dialysis": {
+        "required": [
+            "dialysis_unit",
+            "ecg"
+        ],
+        "optional": [
+            "icu_monitor"
+        ]
+    },
+    "general_checkup": {
+        "required": [
+            "ecg",
+            "ultrasound"
+        ],
+        "optional": [
+            "xray"
+        ]
+    },
+    "emergency_care": {
+        "required": [
+            "defibrillator",
+            "oxygen",
+            "icu_monitor"
+        ],
+        "optional": [
+            "ventilator",
+            "ecg"
+        ]
+    }
+}

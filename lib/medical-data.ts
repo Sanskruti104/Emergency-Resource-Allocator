@@ -36,6 +36,16 @@ export interface RecommendationResult extends Condition {
     requiresICU?: boolean;
 }
 
+export interface HospitalInstrument {
+    hospital_id: string;
+    name: string;
+    instruments: {
+        available: string[];
+        last_updated: string;
+        verified: boolean;
+    }
+}
+
 export const medicalData: Condition[] = [
     {
         id: "osteoarthritis-knee",

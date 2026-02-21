@@ -7,6 +7,9 @@ import {
     getUrgencyDistancePenalty
 } from "@/utils/location_utils";
 import { calculateHospitalRating } from "@/hospital_rating_engine/hospital_rating_engine";
+import { validateInstruments, extractInstrumentFeatures } from "@/lib/instrument-intelligence";
+import { sortDoctorsByRank } from "@/lib/doctor-ranking";
+import { generateDoctorExplanation } from "@/lib/doctor-explainability";
 
 const HOSPITALS_COLLECTION = "hospitals";
 
@@ -155,25 +158,93 @@ export async function POST(request: Request) {
                 });
             }
 
+            // 6. Instrument Availability Intelligence (Score Impact: +15, +5, or -30)
+            const requestedTreatment = profile.treatment || profile.diagnosis || "N/A";
+            const hospitalInstruments = hospital.instruments?.available || [];
+            const instrumentValidation = validateInstruments(requestedTreatment, hospitalInstruments);
+
+            score += instrumentValidation.scoreImpact;
+
+            fitReasons.push({
+                label: instrumentValidation.status === "NO_MATCH" ? "Equipment Gap" : "Equipment Ready",
+                description: instrumentValidation.explanation,
+                match: instrumentValidation.status !== "NO_MATCH"
+            });
+
+            // ML Feature Injection (Simulated training/inference use)
+            const mlFeatures = extractInstrumentFeatures(requestedTreatment, hospitalInstruments);
+
             return {
                 ...hospital,
                 id: hospital._id.toString(),
+                uid: hospital.uid, // Explicitly pass through for mapping
                 suitabilityScore: Math.max(0, score),
                 distance: distanceKm,
                 costRange: estimatedCost < 100000 ? "Low (Budget)" : "Mid (Private)",
                 fitReasons,
-                rating: calculateHospitalRating(hospital)
+                rating: calculateHospitalRating(hospital),
+                instrumentIntelligence: {
+                    ...instrumentValidation,
+                    mlFeatures
+                }
             };
         });
 
         // Filter out extreme mismatches and sort
         const results = scoredHospitals
-            .filter(h => h.suitabilityScore > 0)
+            .filter(h => h.suitabilityScore > 0 && h.instrumentIntelligence.status !== "CRITICAL_MISSING")
             .sort((a, b) => b.suitabilityScore - a.suitabilityScore);
+
+        // --- NEW: Clinical Doctor Recommendation Pipeline ---
+        // Fetch all doctors across matched hospitals that match the specialty
+        const diagnosis = profile.diagnosisCategory || profile.diagnosis || "";
+        const hospitalIds = results.map(h => h.uid);
+
+        const matchingDoctors = await db.collection("visiting_doctors").find({
+            hospitalUid: { $in: hospitalIds },
+            specialization: { $regex: diagnosis, $options: "i" }
+        }).toArray();
+
+        // Calculate hospital count for each doctor to support CSRS ranking
+        const regNumbers = matchingDoctors.map(d => d.registrationNumber);
+        const hospitalCounts = await db.collection("visiting_doctors").aggregate([
+            { $match: { registrationNumber: { $in: regNumbers } } },
+            { $group: { _id: "$registrationNumber", count: { $sum: 1 } } }
+        ]).toArray();
+
+        const countMap = new Map(hospitalCounts.map(c => [c._id, c.count]));
+
+        // Attach Top 3 Recommended Doctors to each hospital result
+        const finalResults = results.map(h => {
+            const doctorsAtHospital = matchingDoctors
+                .filter(d => d.hospitalUid === h.uid)
+                .map(d => ({ ...d, hospitalCount: countMap.get(d.registrationNumber) || 1 }));
+
+            // Apply CSRS Ranking for this hospital scope
+            const searchBoost = new Map();
+            doctorsAtHospital.forEach(d => searchBoost.set(d._id.toString(), 1)); // Max relevance boost since we filtered by specialization
+
+            const topDoctors = sortDoctorsByRank(doctorsAtHospital, searchBoost).slice(0, 3);
+
+            return {
+                ...h,
+                recommendedDoctors: topDoctors.map(d => ({
+                    id: d._id.toString(),
+                    name: d.name,
+                    specialization: d.specialization,
+                    qualification: d.qualification,
+                    experience: d.experience,
+                    profilePhoto: d.profilePhoto,
+                    schedule: d.schedule,
+                    rankingScore: d.rankingScore,
+                    explanation: generateDoctorExplanation(d, d.rankingScore)
+                }))
+            };
+        });
 
         return NextResponse.json({
             success: true,
-            matches: results
+            matches: finalResults
         });
 
     } catch (error: any) {
