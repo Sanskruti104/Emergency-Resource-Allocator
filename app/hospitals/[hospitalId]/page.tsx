@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Progress } from "@/components/ui/progress";
 import {
     MapPin,
     Phone,
@@ -26,6 +27,14 @@ import {
 } from "lucide-react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import {
+    Radar,
+    RadarChart,
+    PolarGrid,
+    PolarAngleAxis,
+    ResponsiveContainer,
+    PolarRadiusAxis
+} from "recharts";
 
 const MiniMap = dynamic(() => import("@/components/map/mini-map"), {
     ssr: false,
@@ -56,11 +65,32 @@ interface HospitalDetail {
     governmentSchemes: string[];
     media: {
         exteriorImages: string[];
+        wardImages: string[];
+        icuImages: string[];
         galleryImages: string[];
         virtualTourLink: string;
     };
     latitude: number;
     longitude: number;
+    rating?: {
+        finalScore: number;
+        starRating: number;
+        breakdown: {
+            infrastructure: number;
+            utilization: number;
+            governance: number;
+            clinicalCoverage: number;
+        };
+        radarData: {
+            infrastructure: number;
+            utilization: number;
+            governance: number;
+            clinicalCoverage: number;
+        };
+        explanations: string[];
+        confidenceScore: number;
+        confidenceLabel: string;
+    };
 }
 
 export default function HospitalDetailPage() {
@@ -205,22 +235,138 @@ export default function HospitalDetailPage() {
                             </div>
                         </section>
 
+                        {/* Rating Analysis Section */}
+                        {hospital.rating && (
+                            <section className="space-y-8 p-8 rounded-[2rem] bg-slate-900 text-white overflow-hidden relative">
+                                <div className="absolute top-0 right-0 p-8 opacity-10">
+                                    <Award className="h-32 w-32" />
+                                </div>
+
+                                <div className="relative z-10 space-y-6">
+                                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                        <div className="space-y-1">
+                                            <h2 className="text-2xl font-bold border-l-4 border-primary pl-4 text-white">Efficiency Rating</h2>
+                                            <p className="text-slate-400 text-sm pl-5">Based on factual infrastructure and operational data.</p>
+                                        </div>
+                                        <div className="flex items-center gap-3 bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/10">
+                                            <div className="text-right">
+                                                <p className="text-[10px] uppercase font-bold tracking-widest text-primary">Star Rating</p>
+                                                <p className="text-2xl font-black">{hospital.rating.starRating} / 5.0</p>
+                                            </div>
+                                            <div className="flex gap-0.5">
+                                                {[1, 2, 3, 4, 5].map((s) => (
+                                                    <div
+                                                        key={s}
+                                                        className={`h-4 w-4 rounded-sm ${s <= Math.round(hospital.rating!.starRating) ? 'bg-primary' : 'bg-white/20'}`}
+                                                    />
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+                                        {/* Chart */}
+                                        <div className="h-[300px] w-full bg-white/5 rounded-3xl p-4">
+                                            <ResponsiveContainer width="100%" height="100%">
+                                                <RadarChart cx="50%" cy="50%" outerRadius="80%" data={[
+                                                    { subject: 'Infra', A: hospital.rating.radarData.infrastructure, fullMark: 100 },
+                                                    { subject: 'Usage', A: hospital.rating.radarData.utilization, fullMark: 100 },
+                                                    { subject: 'Gov', A: hospital.rating.radarData.governance, fullMark: 100 },
+                                                    { subject: 'Scope', A: hospital.rating.radarData.clinicalCoverage, fullMark: 100 },
+                                                ]}>
+                                                    <PolarGrid stroke="#334155" />
+                                                    <PolarAngleAxis dataKey="subject" tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 'bold' }} />
+                                                    <Radar
+                                                        name="Hospital"
+                                                        dataKey="A"
+                                                        stroke="#0ea5e9"
+                                                        fill="#0ea5e9"
+                                                        fillOpacity={0.5}
+                                                    />
+                                                </RadarChart>
+                                            </ResponsiveContainer>
+                                        </div>
+
+                                        {/* Explanations & Confidence */}
+                                        <div className="space-y-6">
+                                            <div className="space-y-3">
+                                                <p className="text-xs font-bold uppercase tracking-widest text-slate-500">Key Highlights</p>
+                                                <div className="space-y-2">
+                                                    {hospital.rating.explanations.map((exp, i) => (
+                                                        <div key={i} className="flex items-center gap-3 bg-white/5 p-3 rounded-xl border border-white/5">
+                                                            <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
+                                                            <p className="text-sm font-medium">{exp}</p>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+
+                                            <div className="pt-4 border-t border-white/10">
+                                                <div className="flex items-center justify-between text-xs mb-2">
+                                                    <span className="text-slate-400 font-medium">Data Confidence</span>
+                                                    <Badge className={
+                                                        hospital.rating.confidenceLabel === 'High' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/20' :
+                                                            hospital.rating.confidenceLabel === 'Medium' ? 'bg-amber-500/20 text-amber-400 border-amber-500/20' :
+                                                                'bg-rose-500/20 text-rose-400 border-rose-500/20'
+                                                    }>
+                                                        {hospital.rating.confidenceLabel}
+                                                    </Badge>
+                                                </div>
+                                                <Progress value={hospital.rating.confidenceScore} className="h-1.5 bg-white/10" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        )}
+
                         {/* Media Section */}
-                        <section className="space-y-6">
+                        <section className="space-y-8">
                             <h2 className="text-2xl font-bold text-slate-900 border-l-4 border-primary pl-4">Hospital Imagery</h2>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                            {/* Exterior & Ward Images */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {hospital.media.exteriorImages.length > 0 ? hospital.media.exteriorImages.slice(0, 2).map((img, i) => (
-                                    <div key={i} className="aspect-video rounded-3xl overflow-hidden bg-slate-100 border border-slate-100 relative group">
+                                    <div key={`ext-${i}`} className="aspect-video rounded-3xl overflow-hidden bg-slate-100 border border-slate-100 relative group">
                                         <img src={img} alt="Exterior" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                                        <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-slate-900">Exterior View</div>
+                                        <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-slate-900 shadow-sm border border-slate-200/50">Exterior View</div>
                                     </div>
                                 )) : (
                                     <div className="aspect-video rounded-3xl bg-slate-50 border border-slate-100 flex flex-col items-center justify-center text-slate-400">
                                         <ImageIcon className="h-10 w-10 mb-2 opacity-20" />
-                                        <span className="text-sm font-medium">No exterior images available</span>
+                                        <span className="text-sm font-medium">No exterior images</span>
+                                    </div>
+                                )}
+
+                                {hospital.media.wardImages.length > 0 ? hospital.media.wardImages.slice(0, 2).map((img, i) => (
+                                    <div key={`ward-${i}`} className="aspect-video rounded-3xl overflow-hidden bg-slate-100 border border-slate-100 relative group">
+                                        <img src={img} alt="Ward" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                                        <div className="absolute top-4 left-4 bg-blue-500/90 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">Medical Ward</div>
+                                    </div>
+                                )) : (
+                                    <div className="aspect-video rounded-3xl bg-slate-50 border border-slate-100 flex flex-col items-center justify-center text-slate-400">
+                                        <ImageIcon className="h-10 w-10 mb-2 opacity-20" />
+                                        <span className="text-sm font-medium">No ward images</span>
                                     </div>
                                 )}
                             </div>
+
+                            {/* ICU & Gallery */}
+                            {(hospital.media.icuImages.length > 0 || hospital.media.galleryImages.length > 0) && (
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 py-2">
+                                    {hospital.media.icuImages.slice(0, 3).map((img, i) => (
+                                        <div key={`icu-${i}`} className="aspect-square rounded-2xl overflow-hidden bg-slate-100 border relative group">
+                                            <img src={img} alt="ICU" className="w-full h-full object-cover transition-transform group-hover:scale-110" />
+                                            <div className="absolute bottom-2 left-2 bg-rose-500/90 text-[10px] text-white px-2 py-0.5 rounded-full font-bold">ICU</div>
+                                        </div>
+                                    ))}
+                                    {hospital.media.galleryImages.slice(0, 3).map((img, i) => (
+                                        <div key={`gal-${i}`} className="aspect-square rounded-2xl overflow-hidden bg-slate-100 border relative group">
+                                            <img src={img} alt="Gallery" className="w-full h-full object-cover transition-transform group-hover:scale-110" />
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
 
                             {/* Virtual Tour */}
                             {hospital.media.virtualTourLink && (

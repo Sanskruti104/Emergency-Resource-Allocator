@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -24,6 +24,13 @@ interface MediaGalleryProps {
 export function MediaGallery({ media, onUpdate }: MediaGalleryProps) {
     const [uploading, setUploading] = useState<string | null>(null)
     const [virtualTourUrl, setVirtualTourUrl] = useState(media.virtualTourLink || "")
+
+    // Sync virtual tour URL when media prop changes
+    useEffect(() => {
+        if (media.virtualTourLink !== undefined) {
+            setVirtualTourUrl(media.virtualTourLink)
+        }
+    }, [media.virtualTourLink])
 
     async function handleImageUpload(category: string, file: File) {
         if (!storage) {

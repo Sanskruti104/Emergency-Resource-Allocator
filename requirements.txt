@@ -1,0 +1,76 @@
+# Project Requirements: Cost Treatment-Decision Platform
+
+## 1. Core Purpose
+A platform to help patients compare medical treatment costs across different hospitals and make data-driven decisions based on ratings, capacity, and location.
+
+## 2. Technical Stack
+- **Frontend**: Next.js 15+, React 19, Tailwind CSS
+- **Backend/Database**: MongoDB, Firebase (Auth & Storage)
+- **UI Components**: Radix UI / Shadcn UI
+- **Visualization**: Recharts, Leaflet (Maps)
+- **Form Management**: React Hook Form with Zod validation
+
+## 3. Functional Requirements
+
+### 3.1 User Authentication & Roles
+- **Patient Portal**: Signup and login via Firebase Authentication.
+- **Hospital Portal**: Enrollment/Signup and login for hospital administrators.
+- **Role-Based Access Control (RBAC)**: Ensuring users only access appropriate dashboards and routes.
+
+### 3.2 Hospital Profile & Management
+- **General Info**: Contact details, OPD timings, specialties, and achievements.
+- **Media Gallery**: Support for uploading and viewing images of wards, ICUs, and general facilities.
+- **Virtual Tours**: Integration for 360° virtual tours of the hospital.
+- **Capacity Management**: Real-time tracking of available ICU beds and general beds.
+- **Treatment/Pricing**: Interface for hospitals to list and update pricing for various treatments.
+
+### 3.3 Hospital Recommendation & Rating Engine
+- **Rating Logic**: Advanced scoring system based on facilities, pricing, and services.
+- **Transparency**: Automated explanation generation for hospital ratings.
+- **Visual Analytics**: Radar charts for rating breakdown and data confidence indicators.
+
+### 3.4 Location & Accessibility
+- **Distance Calculation**: Accurate distance measurement using Haversine formula.
+- **Travel Scoring**: Scoring based on user's travel flexibility (Local, State, Anywhere).
+- **Urgency Penalty**: Dynamic distance penalties based on the urgency of the medical condition.
+
+### 3.5 Treatment Discovery
+- **Treatment Path**: Guided discovery or visualization of treatment steps and options.
+- **Treatment Recommendation**: Personalized recommendations based on user input and hospital data.
+- **Cost Dashboard**: Visualization for patients to compare costs effectively.
+
+### 3.6 Analytics
+- Hospital dashboard including analytics for performance and user engagement.
+
+## 4. Prerequisites & Installation
+
+### 4.1 System Requirements
+- **Node.js**: v18.17.0 or later (v20.x recommended)
+- **Package Manager**: npm (default) or pnpm (preferred, lockfile provided)
+- **Git**: For version control
+
+### 4.2 External Services Setup
+- **Firebase**: Requires a project for Authentication and Cloud Storage.
+- **MongoDB**: Requires a connection string (MongoDB Atlas recommended).
+
+### 4.3 Setup Steps
+1. **Clone the repository**.
+2. **Install Dependencies**: 
+   ```bash
+   npm install
+   # or
+   pnpm install
+   ```
+3. **Environment Configuration**:
+   Create a `.env.local` file based on `.env.local.example` and provide your credentials for:
+   - Firebase (API Key, Project ID, etc.)
+   - MongoDB URI
+
+4. **Run Development Server**:
+   ```bash
+   npm run dev
+   ```
+
+## 5. Pending/Future Requirements
+- Real-time chat or inquiry system (TBD)
+- Appointment booking integration (TBD)

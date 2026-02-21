@@ -13,16 +13,22 @@ export async function PUT(request: Request) {
         const client = await clientPromise;
         const db = client.db();
 
-        // Validate media structure
+        // Get existing hospital to merge media if needed, or just validate new structure
+        const existingHospital = await db.collection("hospitals").findOne({ uid: session.uid });
+        if (!existingHospital) {
+            return NextResponse.json({ error: "Hospital not found" }, { status: 404 });
+        }
+
+        // Validate media structure, falling back to existing data if fields are missing in the request
         const media = {
-            exteriorImages: Array.isArray(data.exteriorImages) ? data.exteriorImages.slice(0, 5) : [],
-            wardImages: Array.isArray(data.wardImages) ? data.wardImages.slice(0, 5) : [],
-            icuImages: Array.isArray(data.icuImages) ? data.icuImages.slice(0, 5) : [],
-            galleryImages: Array.isArray(data.galleryImages) ? data.galleryImages.slice(0, 5) : [],
-            virtualTourLink: data.virtualTourLink || "",
+            exteriorImages: Array.isArray(data.exteriorImages) ? data.exteriorImages.slice(0, 5) : (existingHospital.media?.exteriorImages || []),
+            wardImages: Array.isArray(data.wardImages) ? data.wardImages.slice(0, 5) : (existingHospital.media?.wardImages || []),
+            icuImages: Array.isArray(data.icuImages) ? data.icuImages.slice(0, 5) : (existingHospital.media?.icuImages || []),
+            galleryImages: Array.isArray(data.galleryImages) ? data.galleryImages.slice(0, 5) : (existingHospital.media?.galleryImages || []),
+            virtualTourLink: data.virtualTourLink !== undefined ? data.virtualTourLink : (existingHospital.media?.virtualTourLink || ""),
         };
 
-        // Validate virtual tour URL if provided
+        // Validate virtual tour URL if provided and not empty
         if (media.virtualTourLink) {
             try {
                 new URL(media.virtualTourLink);
@@ -43,10 +49,14 @@ export async function PUT(request: Request) {
         );
 
         if (!result) {
-            return NextResponse.json({ error: "Hospital not found" }, { status: 404 });
+            return NextResponse.json({ error: "Failed to update hospital" }, { status: 500 });
         }
 
-        return NextResponse.json({ success: true, media: result.media });
+        // result is the document itself in driver 6+
+        return NextResponse.json({
+            success: true,
+            media: (result as any).media || media
+        });
     } catch (error: any) {
         console.error("PUT Media error:", error);
         return NextResponse.json({ error: "Internal server error" }, { status: 500 });

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
+import { calculateHospitalRating } from "@/hospital_rating_engine/hospital_rating_engine";
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -62,11 +63,14 @@ export async function GET(
             governmentSchemes: hospital.governmentSchemes || [],
             media: {
                 exteriorImages: hospital.media?.exteriorImages || [],
+                wardImages: hospital.media?.wardImages || [],
+                icuImages: hospital.media?.icuImages || [],
                 galleryImages: hospital.media?.galleryImages || [],
                 virtualTourLink: hospital.media?.virtualTourLink || ""
             },
             latitude: hospital.latitude || 20.5937,
-            longitude: hospital.longitude || 78.9629
+            longitude: hospital.longitude || 78.9629,
+            rating: calculateHospitalRating(hospital)
         };
 
         return NextResponse.json(publicProfile);

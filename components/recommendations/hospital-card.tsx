@@ -44,7 +44,11 @@ export interface Hospital {
   bedAvailability: "Low" | "Medium" | "High"
   icuReadiness: boolean
   fitReasons: FitReason[]
-  distance?: number | null
+  distance?: number | null;
+  rating?: {
+    starRating: number;
+    confidenceLabel: string;
+  };
 }
 
 const bedColors: Record<string, string> = {
@@ -79,6 +83,16 @@ export function HospitalCard({ hospital }: { hospital: Hospital }) {
                 <h3 className="text-lg font-semibold text-foreground">
                   {hospital.name}
                 </h3>
+                {hospital.rating && (
+                  <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 flex items-center gap-1 h-5 px-1.5 rounded-md text-[10px]">
+                    <div className="flex gap-0.5">
+                      {[1, 2, 3, 4, 5].map(s => (
+                        <div key={s} className={`h-1.5 w-1.5 rounded-full ${s <= Math.round(hospital.rating!.starRating) ? 'bg-primary' : 'bg-primary/20'}`} />
+                      ))}
+                    </div>
+                    {hospital.rating.starRating}
+                  </Badge>
+                )}
                 {hospital.distance !== undefined && hospital.distance !== null && (
                   <Badge variant="outline" className="text-[10px] font-bold py-0 h-4 border-slate-200 text-slate-500">
                     {hospital.distance.toFixed(1)} km

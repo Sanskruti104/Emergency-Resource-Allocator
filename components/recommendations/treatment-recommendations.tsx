@@ -86,7 +86,8 @@ export function TreatmentRecommendations() {
             bedAvailability: h.capacity?.totalBeds > 50 ? "High" : "Medium",
             icuReadiness: h.capacity?.icuBeds > 0,
             fitReasons: h.fitReasons || [],
-            distance: h.distance
+            distance: h.distance,
+            rating: h.rating
           }))
           setHospitals(mappedHospitals)
         }

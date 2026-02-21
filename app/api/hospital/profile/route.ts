@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
 import { getServerSession } from "@/lib/auth-utils";
+import { calculateHospitalRating } from "@/hospital_rating_engine/hospital_rating_engine";
 
 export async function GET() {
     try {
@@ -21,7 +22,10 @@ export async function GET() {
             });
         }
 
-        return NextResponse.json(hospital);
+        return NextResponse.json({
+            ...hospital,
+            rating: calculateHospitalRating(hospital)
+        });
     } catch (error: any) {
         console.error("GET Hospital Profile error:", error);
         return NextResponse.json({ error: "Internal server error" }, { status: 500 });

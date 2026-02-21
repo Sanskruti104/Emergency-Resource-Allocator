@@ -6,6 +6,7 @@ import {
     getTravelCompatibilityScore,
     getUrgencyDistancePenalty
 } from "@/utils/location_utils";
+import { calculateHospitalRating } from "@/hospital_rating_engine/hospital_rating_engine";
 
 const HOSPITALS_COLLECTION = "hospitals";
 
@@ -160,7 +161,8 @@ export async function POST(request: Request) {
                 suitabilityScore: Math.max(0, score),
                 distance: distanceKm,
                 costRange: estimatedCost < 100000 ? "Low (Budget)" : "Mid (Private)",
-                fitReasons
+                fitReasons,
+                rating: calculateHospitalRating(hospital)
             };
         });
 

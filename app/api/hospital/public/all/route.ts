@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
+import { calculateHospitalRating } from "@/hospital_rating_engine/hospital_rating_engine";
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -20,7 +21,8 @@ export async function GET() {
             state: h.state || "Unknown",
             latitude: h.latitude || 20.5937, // Default to India center if missing
             longitude: h.longitude || 78.9629,
-            specialties: h.specialties || []
+            specialties: h.specialties || [],
+            rating: calculateHospitalRating(h)
         }));
 
         return NextResponse.json(publicHospitals);
