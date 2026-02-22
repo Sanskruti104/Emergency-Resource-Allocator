@@ -8,3 +8,13 @@ node_modules/
 .next/
 .env*.local
 .DS_Store
+__pycache__/
+*.pyc
+.venv/
+env/
+.idea/
+.vscode/
+dist/
+build/
+.gemini/
+.agents/

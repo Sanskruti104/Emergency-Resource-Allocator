@@ -34,7 +34,7 @@ export async function POST(request: Request) {
 
         // 2. Resolve Treatment Context
         const treatmentContext = {
-            name: "Premium Cardiac Surgery",
+            name: payload.treatmentName || "General Consultation",
             base_cost: 450000,
             is_icu: true,
             intensity: 4,
@@ -46,10 +46,10 @@ export async function POST(request: Request) {
         console.log(`Querying hospitals for: ${specialtyQuery}`);
         let hospitals = await db.collection("hospitals").find({
             specialties: { $regex: specialtyQuery, $options: "i" }
-        }).limit(5).toArray();
+        }).limit(10).toArray(); // Increased limit for better comparison
 
         if (hospitals.length === 0) {
-            hospitals = await db.collection("hospitals").find({}).limit(5).toArray();
+            hospitals = await db.collection("hospitals").find({}).limit(10).toArray();
         }
 
         console.log(`Found ${hospitals.length} candidate hospitals`);
@@ -59,7 +59,8 @@ export async function POST(request: Request) {
             patient: {
                 budget: Number(profile.budgetMax) || 1000000,
                 insurance_tier: profile.insuranceType || "Private - Tier 2",
-                govt_eligible: profile.insuranceType === "Govt - PMJAY"
+                govt_eligible: profile.insuranceType === "Govt - PMJAY",
+                symptoms: profile.symptoms || ""
             },
             hospitals: hospitals.map(h => {
                 const hospitalInstruments = h.instruments?.available || [];
@@ -74,10 +75,12 @@ export async function POST(request: Request) {
                     occupancy: h.capacity?.occupancy || 0.4,
                     icu_beds: h.capacity?.icuBeds || 8,
                     instrument_ratio: instrumentFeatures.instrument_match_ratio,
-                    distance_km: h.distance || 12.5
+                    distance_km: h.distance || 12.5,
+                    specialties: h.specialties // Pass specialties list for server-side filtering
                 };
             }),
-            treatment: treatmentContext
+            treatment: treatmentContext,
+            symptom_text: profile.symptoms || payload.symptoms || ""
         };
 
         console.log("Requesting Batch AI Analysis from Python...");
@@ -94,7 +97,8 @@ export async function POST(request: Request) {
             throw new Error(`Python API Error: ${pythonRes.status} - ${errorText}`);
         }
 
-        const batchResults = await pythonRes.json();
+        const batchData = await pythonRes.json();
+        const batchResults = batchData.recommendations || [];
 
         // 5. Final Mapping
         const finalMatches = batchResults.map((recommendation: any, index: number) => {
@@ -110,7 +114,11 @@ export async function POST(request: Request) {
         return NextResponse.json({
             success: true,
             treatment: treatmentContext,
-            matches: finalMatches
+            matches: finalMatches,
+            detection: {
+                specialty: batchData.detected_specialty,
+                confidence: batchData.confidence
+            }
         });
 
     } catch (error: any) {

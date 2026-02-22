@@ -87,23 +87,23 @@ export function RecommendationInput({ onSearch, isLoading }: RecommendationInput
                 <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-64 h-64 bg-primary/5 rounded-full blur-3xl" />
 
                 <div className="relative z-10 flex-1 flex flex-col justify-center">
-                    {/* Step 1: Query */}
+                    {/* Step 1: Symptoms/Query */}
                     {step === 1 && (
                         <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
                             <div className="space-y-4">
-                                <Label className="text-xl font-bold text-slate-800">What symptoms or procedures are you inquiring about?</Label>
+                                <Label className="text-xl font-bold text-slate-800">Describe Your Symptoms</Label>
                                 <div className="relative flex items-center">
                                     <Search className="absolute left-5 h-6 w-6 text-slate-400" />
                                     <Input
                                         autoFocus
                                         value={query}
                                         onChange={(e) => setQuery(e.target.value)}
-                                        placeholder="Heart bypass, Knee pain, Eye cataract..."
+                                        placeholder="e.g. knee pain while walking, chest tightness, eye redness..."
                                         className="h-20 pl-14 pr-6 rounded-3xl text-xl shadow-inner border-slate-200 bg-slate-50/30 focus-visible:ring-primary/20 transition-all focus:bg-white"
                                     />
                                 </div>
                                 <div className="flex flex-wrap gap-2 pt-2">
-                                    {["Angioplasty", "Knee Replacement", "Cataract", "Spine Surgery", "Gallstones"].map(tag => (
+                                    {["High Fever", "Joint Inflammation", "Pregnancy Checkup", "Chronic Headaches", "Heart Palpitations"].map(tag => (
                                         <button
                                             key={tag}
                                             onClick={() => setQuery(tag)}

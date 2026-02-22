@@ -106,34 +106,63 @@ export function StepTreatmentContext({ formData, onChange }: StepTreatmentContex
             </div>
 
             <div className="space-y-4">
-                <div className="space-y-2">
-                    <Label>Diagnosis Category</Label>
-                    <Select
-                        value={formData.diagnosisCategory}
-                        onValueChange={(val) => {
-                            // Implements the event listener behavior requested
-                            console.log("Selected Category:", val);
-                            console.log("Available categories:", [...new Set(allConditions.map(c => c.category))]);
+                <div className="space-y-3">
+                    <Label className="text-base font-bold text-slate-800">Describe Your Symptoms</Label>
+                    <div className="relative">
+                        <textarea
+                            value={formData.symptoms || ""}
+                            onChange={(e) => {
+                                const val = e.target.value;
+                                onChange("symptoms", val);
 
-                            onChange("diagnosisCategory", val);
-                            onChange("conditionKey", "");
-                            updateConditionDropdown(val);
-                        }}
-                    >
-                        <SelectTrigger>
-                            <SelectValue placeholder="Select category" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="Cardiac">Cardiology (Heart)</SelectItem>
-                            <SelectItem value="Orthopedic">Orthopedics (Bone/Joint)</SelectItem>
-                            <SelectItem value="Neuro">Neurology (Brain/Nerve)</SelectItem>
-                            <SelectItem value="General Surgery">General Surgery</SelectItem>
-                            <SelectItem value="Oncology">Oncology (Cancer)</SelectItem>
-                            <SelectItem value="Maternity">Maternity</SelectItem>
-                            <SelectItem value="Pediatrics">Pediatrics</SelectItem>
-                            <SelectItem value="Other">Other</SelectItem>
-                        </SelectContent>
-                    </Select>
+                                // Auto-detect debounced
+                                clearTimeout((window as any)._detectTimer);
+                                (window as any)._detectTimer = setTimeout(async () => {
+                                    if (val.length > 5) {
+                                        setIsLoading(true);
+                                        try {
+                                            const res = await fetch("http://localhost:8001/analyze-symptoms", {
+                                                method: "POST",
+                                                headers: { "Content-Type": "application/json" },
+                                                body: JSON.stringify({ symptom_text: val }),
+                                            });
+                                            const data = await res.json();
+                                            if (data.detected_specialty) {
+                                                onChange("diagnosisCategory", data.detected_specialty);
+                                                (window as any)._detection = data;
+                                            }
+                                        } catch (err) {
+                                            console.error("Auto-detect failed", err);
+                                        } finally {
+                                            setIsLoading(false);
+                                        }
+                                    }
+                                }, 800);
+                            }}
+                            placeholder="e.g. Sharp pain in the knee, chest tightness after climbing stairs..."
+                            className="w-full min-h-[120px] rounded-2xl border border-slate-200 p-4 text-lg focus:ring-2 focus:ring-primary/20 outline-none transition-all bg-slate-50/50"
+                        />
+                        {isLoading && (
+                            <div className="absolute top-4 right-4 animate-spin">
+                                <Loader2 className="h-5 w-5 text-primary" />
+                            </div>
+                        )}
+                    </div>
+
+                    {formData.diagnosisCategory && (
+                        <div className="flex items-center gap-2 animate-in fade-in slide-in-from-left-2 duration-500">
+                            <div className="bg-emerald-50 text-emerald-700 border border-emerald-100 py-1.5 px-4 rounded-full text-sm font-bold flex items-center gap-2">
+                                <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                                AI-Detected Specialty: {formData.diagnosisCategory}
+                            </div>
+                            <button
+                                onClick={() => onChange("diagnosisCategory", "")}
+                                className="text-xs text-slate-400 hover:text-rose-500 font-bold underline transition-colors"
+                            >
+                                (Reset)
+                            </button>
+                        </div>
+                    )}
                 </div>
 
                 <div className="space-y-2">

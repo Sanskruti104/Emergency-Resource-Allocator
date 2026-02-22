@@ -73,7 +73,9 @@ export function TreatmentRecommendations() {
       try {
         // Switching to the Unified Recommendation Engine
         const payload = {
-          treatmentId: diagnosis, // Pass whatever context is available
+          treatmentId: diagnosis,
+          treatmentName: treatment,
+          symptoms: searchParams.get("symptoms") || "",
           patientOverride: {
             budgetMax,
             insuranceType: insurance,

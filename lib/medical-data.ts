@@ -30,7 +30,12 @@ export interface PatientContext {
 }
 
 export interface RecommendationResult extends Condition {
-    patientContext?: PatientContext;
+    symptoms?: string;
+    patientContext?: {
+        latitude?: number;
+        longitude?: number;
+        travelFlexibility?: string;
+    };
     selectedTreatment?: string;
     resourceIntensity?: string;
     requiresICU?: boolean;

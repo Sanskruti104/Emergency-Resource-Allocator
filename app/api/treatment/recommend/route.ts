@@ -11,40 +11,63 @@ export async function POST(request: Request) {
     try {
         const body = await request.json();
         let { query, conditionKey, diagnosisCategory } = body;
+        let detectionInfo = null;
 
-        // If only raw query text is provided (e.g. "hip pain"), map it to a conditionKey
-        if (query && !conditionKey && !diagnosisCategory) {
-            conditionKey = mapInputToCondition(query);
-            if (conditionKey) {
-                diagnosisCategory = conditionDictionary[conditionKey]?.category;
-            } else {
-                return NextResponse.json({
-                    found: false,
-                    message: "No matching clinical condition found. Please specify symptoms more clearly."
-                }, { status: 404 });
+        // NEW: Symptom Detection Layer via Python Backend
+        if (query && !diagnosisCategory) {
+            try {
+                const detectRes = await fetch("http://localhost:8001/analyze-symptoms", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ symptom_text: query }),
+                });
+
+                if (detectRes.ok) {
+                    const data = await detectRes.json();
+                    if (data.detected_specialty) {
+                        diagnosisCategory = data.detected_specialty;
+                        detectionInfo = {
+                            specialty: data.detected_specialty,
+                            confidence: data.confidence
+                        };
+                    }
+                }
+            } catch (err) {
+                console.warn("Symptom detection service unavailable, falling back to keywords:", err);
             }
         }
 
-        if (!diagnosisCategory && !conditionKey) {
+        // If only raw query text is provided (e.g. "hip pain"), map it to a conditionKey
+        if (query && !conditionKey) {
+            conditionKey = mapInputToCondition(query);
+            if (conditionKey && !diagnosisCategory) {
+                diagnosisCategory = conditionDictionary[conditionKey]?.category;
+            }
+        }
+
+        if (!diagnosisCategory && !conditionKey && !query) {
             return NextResponse.json({ error: "Clinical indicators (query or category) required" }, { status: 400 });
         }
 
         // Process the condition key through the treatment engine
-        const treatmentInfoList = processTreatmentInput(conditionKey, diagnosisCategory);
+        const treatmentInfoList = processTreatmentInput(conditionKey || query, diagnosisCategory);
         const treatmentInfo = Array.isArray(treatmentInfoList) ? treatmentInfoList[0] : treatmentInfoList;
 
-        if (!treatmentInfo) {
+        if (!treatmentInfo && !diagnosisCategory) {
             return NextResponse.json({
                 found: false,
-                message: "No treatment information available for the provided criteria."
+                message: "No matching clinical condition found. Please specify symptoms more clearly."
             }, { status: 404 });
         }
 
         return NextResponse.json({
             found: true,
+            detection: detectionInfo,
             condition: {
-                ...treatmentInfo,
-                conditionCategory: diagnosisCategory || (treatmentInfo as any).conditionCategory
+                ...(treatmentInfo || {}),
+                selectedTreatment: treatmentInfo?.selectedTreatment || `General Consultation (${diagnosisCategory})`,
+                conditionCategory: diagnosisCategory || (treatmentInfo as any)?.conditionCategory,
+                symptoms: query
             }
         });
 

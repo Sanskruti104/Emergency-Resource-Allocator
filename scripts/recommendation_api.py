@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import logging
 import json
@@ -16,6 +17,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 try:
     from cost_outcome_service import CostOutcomeService
     from explainability_service import ExplainabilityService
+    from symptom_classifier import detect_specialty
 except ImportError as e:
     print(f"Integration Error: {e}")
     raise
@@ -28,6 +30,15 @@ app = FastAPI(
     title="MedDecision Unified Recommendation Engine",
     description="E2E Pipeline: ML Suitability -> Cost-Outcome -> XAI Explainability",
     version="2.0.0"
+)
+
+# Add CORS Middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # For development, allow all. In production, specify origins.
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # --- MODELS & SERVICES CACHING ---
@@ -59,13 +70,30 @@ class RecommendationRequest(BaseModel):
     patient: dict 
     hospital: dict
     treatment: dict
+    symptom_text: str = ""  # Optional field for auto-detection
 
 class BatchRecommendationRequest(BaseModel):
     patient: dict
     hospitals: list # List of hospital dictionaries
     treatment: dict
+    symptom_text: str = ""  # Optional field for auto-detection
+
+class SymptomAnalysisRequest(BaseModel):
+    symptom_text: str
 
 # --- CORE PIPELINE LOGIC ---
+@app.post("/analyze-symptoms")
+async def analyze_symptoms(request: SymptomAnalysisRequest):
+    """
+    Dedicated endpoint for frontend auto-detection.
+    """
+    try:
+        detection = detect_specialty(request.symptom_text)
+        return detection
+    except Exception as e:
+        logger.error(f"Symptom Analysis Error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.post("/generate")
 async def generate_recommendation_report(request: RecommendationRequest):
     """
@@ -79,8 +107,12 @@ async def generate_recommendation_report(request: RecommendationRequest):
         t_data = data['treatment']
 
         # Reuse batch logic with single hospital
-        results = process_recommendations(p_data, [h_data], t_data)
-        return results[0]
+        results, detection = process_recommendations(p_data, [h_data], t_data, request.symptom_text)
+        
+        response = results[0]
+        response["detected_specialty"] = detection.get("detected_specialty")
+        response["confidence"] = detection.get("confidence")
+        return response
 
     except Exception as e:
         logger.error(f"Recommendation Generation Error: {e}")
@@ -94,15 +126,45 @@ async def generate_batch_recommendations(request: BatchRecommendationRequest):
     """
     try:
         data = request.dict()
-        results = process_recommendations(data['patient'], data['hospitals'], data['treatment'])
-        return results
+        results, detection = process_recommendations(data['patient'], data['hospitals'], data['treatment'], request.symptom_text)
+        
+        return {
+            "detected_specialty": detection.get("detected_specialty"),
+            "confidence": detection.get("confidence"),
+            "recommendations": results
+        }
     except Exception as e:
         logger.error(f"Batch Recommendation Error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-def process_recommendations(p_data, h_list, t_data):
+def process_recommendations(p_data, h_list, t_data, symptom_text=None):
     try:
         candidate_inputs = []
+        
+        # --- NEW: SYMPTOM-TO-SPECIALTY FILTERING LAYER ---
+        user_query = symptom_text or p_data.get('symptoms') or t_data.get('query') or ""
+        detection = detect_specialty(user_query)
+        detected_specialty = detection.get("detected_specialty")
+        
+        if detected_specialty:
+            logger.info(f"Context Layer: Detected Specialty '{detected_specialty}' (Conf: {detection['confidence']})")
+            # Filter hospitals that support this specialty
+            # Expecting hospital['specialties'] to be a list or comma-separated string
+            filtered_hospitals = []
+            for h in h_list:
+                h_specs = h.get('specialties', [])
+                if isinstance(h_specs, str):
+                    h_specs = [s.strip() for s in h_specs.split(',')]
+                
+                if detected_specialty in h_specs:
+                    filtered_hospitals.append(h)
+            
+            # If filtering results in empty set, fallback to original list to avoid breaking pipeline
+            if filtered_hospitals:
+                logger.info(f"Filtering: {len(h_list)} -> {len(filtered_hospitals)} hospitals matching {detected_specialty}")
+                h_list = filtered_hospitals
+            else:
+                logger.warning(f"No hospitals match detected specialty '{detected_specialty}'. Falling back to full list.")
         
         for h_data in h_list:
             # 1. PHASE 1: ML INFERENCE
@@ -142,9 +204,9 @@ def process_recommendations(p_data, h_list, t_data):
             }
 
             ml_output = {
-                "suitability_score": round(ml_suitability, 2),
+                "suitability_score": round(float(ml_suitability), 2),
                 "risk_class": ml_risk_class,
-                "risk_score": round(ml_risk_prob, 4),
+                "risk_score": round(float(ml_risk_prob), 4),
                 "feature_impact": feature_impact
             }
 
@@ -189,7 +251,7 @@ def process_recommendations(p_data, h_list, t_data):
             report["suitability_score"] = candidate_inputs[i]["ml_output"]["suitability_score"]
             # summary is already in report from explainability_service
             
-        return final_reports
+        return final_reports, detection
 
     except Exception as e:
         logger.error(f"Recommendation Generation Error: {e}")

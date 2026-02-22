@@ -10,7 +10,7 @@ import { Condition, RecommendationResult } from "@/lib/medical-data"
 import { Badge } from "@/components/ui/badge"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
-import { Info, Stethoscope, ArrowRight } from "lucide-react"
+import { Info, Stethoscope, ArrowRight, Sparkles } from "lucide-react"
 
 export default function TreatmentRecommendationPage() {
     const router = useRouter()
@@ -79,7 +79,8 @@ export default function TreatmentRecommendationPage() {
             treatment: (typeof selectedSubTreatment === 'string' ? selectedSubTreatment : null) || result.treatments?.[0]?.name || result.selectedTreatment || "",
             latitude: result.patientContext?.latitude?.toString() || "",
             longitude: result.patientContext?.longitude?.toString() || "",
-            travelFlexibility: result.patientContext?.travelFlexibility || "Local only"
+            travelFlexibility: result.patientContext?.travelFlexibility || "Local only",
+            symptoms: result.symptoms || ""
         });
 
         router.push(`/recommendations?${params.toString()}`);
@@ -110,6 +111,16 @@ export default function TreatmentRecommendationPage() {
                 {/* Results Section */}
                 {result && (
                     <div className="space-y-10 py-10 animate-in fade-in slide-in-from-bottom-8 duration-700">
+
+                        {/* Automated Detection Badge */}
+                        {(result as any).detection && (
+                            <div className="flex justify-center -mb-6 animate-in zoom-in duration-500">
+                                <Badge className="bg-primary/5 text-primary border-primary/20 hover:bg-primary/10 text-sm py-2 px-6 rounded-2xl font-bold flex gap-2 shadow-sm border">
+                                    <Sparkles className="h-4 w-4 fill-primary/20" />
+                                    AI-Detected Category: {(result as any).detection.specialty} ({Math.round((result as any).detection.confidence * 100)}% Confidence)
+                                </Badge>
+                            </div>
+                        )}
 
                         {/* 1. Condition Overview */}
                         <ConditionCard condition={result} />
