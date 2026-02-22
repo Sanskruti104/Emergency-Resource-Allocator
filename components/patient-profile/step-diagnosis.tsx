@@ -11,7 +11,8 @@ import {
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
-import { Loader2, Sparkles, AlertCircle } from "lucide-react"
+import { Loader2, Sparkles, AlertCircle, MessageSquare } from "lucide-react"
+import { VoiceRecorder } from "@/components/treatment/voice-recorder"
 
 const categories = [
   { value: "Orthopedic", label: "Orthopedics" },
@@ -75,32 +76,57 @@ export function StepDiagnosis({ value, onChange }: StepDiagnosisProps) {
         </p>
       </div>
 
-      <div className="flex flex-col gap-4">
-        <Label htmlFor="symptoms" className="text-lg font-bold">What are you feeling?</Label>
+      <div className="bg-slate-50/80 rounded-3xl p-8 border border-slate-100 space-y-6 shadow-sm">
+        <div className="flex items-center gap-4 mb-2">
+          <div className="h-12 w-12 rounded-2xl bg-primary shadow-lg shadow-primary/20 flex items-center justify-center">
+            <Sparkles className="h-6 w-6 text-white" />
+          </div>
+          <div>
+            <h3 className="text-lg font-bold text-slate-900 tracking-tight">Clinical Voice Assistant</h3>
+            <p className="text-sm text-slate-500 font-medium">Listening and Analyzing Symptoms</p>
+          </div>
+        </div>
+
         <div className="relative">
-          <Textarea
-            id="symptoms"
-            placeholder="e.g. Sharp pain in the knee while walking, chest tightness after climbing stairs, persistent headache..."
-            className="min-h-[150px] rounded-2xl text-lg p-5 border-slate-200 focus:ring-primary/20 transition-all bg-slate-50/30"
-            value={symptoms}
-            onChange={(e) => setSymptoms(e.target.value)}
-          />
-          {isDetecting && (
-            <div className="absolute top-4 right-4 animate-spin">
-              <Loader2 className="h-6 w-6 text-primary" />
+          <div className="flex items-start gap-4 mb-6">
+            <div className="bg-white p-5 rounded-2xl rounded-tl-none border border-slate-200 shadow-sm max-w-[90%] animate-in slide-in-from-left-2 duration-500">
+              <p className="text-base font-bold text-slate-700 leading-relaxed italic">
+                "Welcome! I am your clinical assistant. You can speak your symptoms by clicking the microphone or type them directly. I'll automatically find the right medical specialty for you."
+              </p>
             </div>
-          )}
+          </div>
+
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center justify-between px-2">
+              <Label htmlFor="symptoms" className="text-lg font-bold text-slate-800">Your Symptoms</Label>
+              <VoiceRecorder onTranscription={(text) => setSymptoms(text)} />
+            </div>
+            <div className="relative group">
+              <Textarea
+                id="symptoms"
+                placeholder="e.g. Sharp pain in the knee while walking, chest tightness after climbing stairs, persistent headache..."
+                className="min-h-[160px] rounded-2xl text-lg p-6 border-slate-200 focus:ring-2 focus:ring-primary/20 transition-all bg-white shadow-sm outline-none"
+                value={symptoms}
+                onChange={(e) => setSymptoms(e.target.value)}
+              />
+              {isDetecting && (
+                <div className="absolute top-4 right-4 animate-spin">
+                  <Loader2 className="h-6 w-6 text-primary" />
+                </div>
+              )}
+            </div>
+          </div>
         </div>
 
         {detection && (
           <div className="flex items-center gap-3 animate-in fade-in slide-in-from-left-2 duration-500">
-            <Badge className="bg-primary/10 text-primary border-none text-sm py-1.5 px-4 rounded-full font-bold flex gap-2">
-              <Sparkles className="h-4 w-4" />
-              Detected Category: {detection.specialty} ({Math.round(detection.confidence * 100)}% confidence)
+            <Badge className="bg-emerald-50 text-emerald-700 border border-emerald-100 py-2.5 px-6 rounded-full text-sm font-bold flex gap-3 shadow-sm">
+              <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+              Detected Specialty: {detection.specialty} ({Math.round(detection.confidence * 100)}%)
             </Badge>
             <button
               onClick={() => setShowManual(!showManual)}
-              className="text-sm font-bold text-slate-500 hover:text-primary transition-colors underline decoration-dotted"
+              className="text-xs font-bold text-slate-400 hover:text-primary transition-colors underline decoration-dotted"
             >
               {showManual ? "Hide manual selection" : "Change Category Manually"}
             </button>
@@ -121,25 +147,25 @@ export function StepDiagnosis({ value, onChange }: StepDiagnosisProps) {
             )}
           </div>
         )}
-      </div>
 
-      {(showManual || !detection) && (
-        <div className="flex flex-col gap-3 pt-4 border-t border-slate-100 animate-in fade-in slide-in-from-top-2">
-          <Label htmlFor="diagnosis-category" className="font-bold">Manual Category Override</Label>
-          <Select value={value} onValueChange={(val) => { onChange(val); setShowManual(false); }}>
-            <SelectTrigger id="diagnosis-category" className="h-14 rounded-2xl bg-white border-slate-200 shadow-sm font-medium">
-              <SelectValue placeholder="Choose a diagnosis category" />
-            </SelectTrigger>
-            <SelectContent className="rounded-2xl">
-              {categories.map((cat) => (
-                <SelectItem key={cat.value} value={cat.value} className="rounded-xl">
-                  {cat.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      )}
+        {(showManual || !detection) && (
+          <div className="flex flex-col gap-3 pt-4 border-t border-slate-100 animate-in fade-in slide-in-from-top-2">
+            <Label htmlFor="diagnosis-category" className="font-bold">Manual Category Override</Label>
+            <Select value={value} onValueChange={(val) => { onChange(val); setShowManual(false); }}>
+              <SelectTrigger id="diagnosis-category" className="h-14 rounded-2xl bg-white border-slate-200 shadow-sm font-medium">
+                <SelectValue placeholder="Choose a diagnosis category" />
+              </SelectTrigger>
+              <SelectContent className="rounded-2xl">
+                {categories.map((cat) => (
+                  <SelectItem key={cat.value} value={cat.value} className="rounded-xl">
+                    {cat.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
+      </div>
     </div>
   )
 }

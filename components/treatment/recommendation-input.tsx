@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Search, Loader2, Info, Landmark, Clock, Wallet, MapPin, SlidersHorizontal, ArrowLeft, ArrowRight, Stethoscope, ShieldCheck } from "lucide-react"
+import { Search, Loader2, Info, Landmark, Clock, Wallet, MapPin, SlidersHorizontal, ArrowLeft, ArrowRight, Stethoscope, ShieldCheck, Sparkles } from "lucide-react"
 import { Label } from "@/components/ui/label"
 import {
     Select,
@@ -13,6 +13,7 @@ import {
     SelectValue
 } from "@/components/ui/select"
 import { LocationPicker } from "./location-picker"
+import { VoiceRecorder } from "./voice-recorder"
 
 interface RecommendationInputProps {
     onSearch: (data: any) => void
@@ -89,30 +90,55 @@ export function RecommendationInput({ onSearch, isLoading }: RecommendationInput
                 <div className="relative z-10 flex-1 flex flex-col justify-center">
                     {/* Step 1: Symptoms/Query */}
                     {step === 1 && (
-                        <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
-                            <div className="space-y-4">
-                                <Label className="text-xl font-bold text-slate-800">Describe Your Symptoms</Label>
-                                <div className="relative flex items-center">
-                                    <Search className="absolute left-5 h-6 w-6 text-slate-400" />
-                                    <Input
-                                        autoFocus
-                                        value={query}
-                                        onChange={(e) => setQuery(e.target.value)}
-                                        placeholder="e.g. knee pain while walking, chest tightness, eye redness..."
-                                        className="h-20 pl-14 pr-6 rounded-3xl text-xl shadow-inner border-slate-200 bg-slate-50/30 focus-visible:ring-primary/20 transition-all focus:bg-white"
-                                    />
+                        <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500">
+                            {/* Chatbot Header */}
+                            <div className="bg-slate-50/50 rounded-3xl p-6 border border-slate-100 space-y-4">
+                                <div className="flex items-center gap-3 mb-2">
+                                    <div className="h-10 w-10 rounded-2xl bg-primary shadow-lg shadow-primary/10 flex items-center justify-center">
+                                        <Sparkles className="h-5 w-5 text-white" />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-sm font-bold text-slate-900 uppercase tracking-widest">Clinical Voice Assistant</h3>
+                                        <p className="text-xs text-slate-500 font-medium tracking-tight">AI-Powered Diagnostic Bridge</p>
+                                    </div>
                                 </div>
-                                <div className="flex flex-wrap gap-2 pt-2">
-                                    {["High Fever", "Joint Inflammation", "Pregnancy Checkup", "Chronic Headaches", "Heart Palpitations"].map(tag => (
-                                        <button
-                                            key={tag}
-                                            onClick={() => setQuery(tag)}
-                                            className="px-4 py-1.5 rounded-full bg-slate-100 text-slate-600 text-sm font-bold hover:bg-primary/10 hover:text-primary transition-colors"
-                                        >
-                                            + {tag}
-                                        </button>
-                                    ))}
+
+                                <div className="flex items-start gap-3 animate-in fade-in slide-in-from-left-2 duration-500">
+                                    <div className="bg-white p-4 rounded-2xl rounded-tl-none border border-slate-200 shadow-sm max-w-[90%]">
+                                        <p className="text-sm font-bold text-slate-700 leading-relaxed italic">
+                                            "Hello! I am your MedDecision AI Assistant. Speak or type your symptoms, and I will find the best-matched clinical path for you."
+                                        </p>
+                                    </div>
                                 </div>
+
+                                <div className="space-y-4 pt-2">
+                                    <div className="flex items-center justify-between px-1">
+                                        <Label className="text-base font-bold text-slate-800">Your Symptoms</Label>
+                                        <VoiceRecorder onTranscription={(text) => setQuery(text)} />
+                                    </div>
+                                    <div className="relative group flex items-center">
+                                        <Search className="absolute left-5 h-6 w-6 text-slate-400 group-focus-within:text-primary transition-colors" />
+                                        <Input
+                                            autoFocus
+                                            value={query}
+                                            onChange={(e) => setQuery(e.target.value)}
+                                            placeholder="e.g. knee pain while walking, chest tightness..."
+                                            className="h-20 pl-14 pr-6 rounded-3xl text-xl shadow-inner border-slate-200 bg-white focus-visible:ring-primary/20 transition-all focus:bg-white"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="flex flex-wrap gap-2 px-2">
+                                {["High Fever", "Joint Inflammation", "Pregnancy Checkup", "Chronic Headaches", "Heart Palpitations"].map(tag => (
+                                    <button
+                                        key={tag}
+                                        onClick={() => setQuery(tag)}
+                                        className="px-4 py-2 rounded-full bg-slate-100 text-slate-600 text-sm font-bold hover:bg-primary/10 hover:text-primary transition-colors border border-transparent hover:border-primary/20"
+                                    >
+                                        + {tag}
+                                    </button>
+                                ))}
                             </div>
                         </div>
                     )}

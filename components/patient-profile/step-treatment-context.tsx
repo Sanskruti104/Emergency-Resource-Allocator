@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback } from "react"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Loader2 } from "lucide-react"
+import { Loader2, Sparkles, MessageSquare } from "lucide-react"
+import { VoiceRecorder } from "@/components/treatment/voice-recorder"
+import { Badge } from "@/components/ui/badge"
 import {
     Select,
     SelectContent,
@@ -25,6 +27,33 @@ export function StepTreatmentContext({ formData, onChange }: StepTreatmentContex
     const [allConditions, setAllConditions] = useState<Condition[]>([]);
     const [conditions, setConditions] = useState<Condition[]>([]);
     const [isLoading, setIsLoading] = useState(false);
+
+    const handleSymptomDetection = async (val: string) => {
+        if (val.length > 5) {
+            setIsLoading(true);
+            try {
+                const res = await fetch("http://localhost:8001/analyze-symptoms", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ symptom_text: val }),
+                });
+                const data = await res.json();
+                if (data.detected_specialty) {
+                    onChange("diagnosisCategory", data.detected_specialty);
+                    (window as any)._detection = data;
+                }
+            } catch (err) {
+                console.error("Auto-detect failed", err);
+            } finally {
+                setIsLoading(false);
+            }
+        }
+    };
+
+    const handleSymptomDetectionDebounced = (val: string) => {
+        clearTimeout((window as any)._detectTimer);
+        (window as any)._detectTimer = setTimeout(() => handleSymptomDetection(val), 800);
+    };
 
     /**
      * Updates the condition dropdown based on the selected category.
@@ -106,54 +135,61 @@ export function StepTreatmentContext({ formData, onChange }: StepTreatmentContex
             </div>
 
             <div className="space-y-4">
-                <div className="space-y-3">
-                    <Label className="text-base font-bold text-slate-800">Describe Your Symptoms</Label>
-                    <div className="relative">
-                        <textarea
-                            value={formData.symptoms || ""}
-                            onChange={(e) => {
-                                const val = e.target.value;
-                                onChange("symptoms", val);
+                <div className="bg-slate-50/80 rounded-3xl p-6 border border-slate-100 space-y-4 shadow-sm">
+                    <div className="flex items-center gap-3 mb-2">
+                        <div className="h-10 w-10 rounded-2xl bg-primary/10 flex items-center justify-center">
+                            <Sparkles className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Clinical Voice Assistant</h3>
+                            <p className="text-xs text-slate-500 font-medium tracking-tight">AI-Powered Symptom Analysis</p>
+                        </div>
+                    </div>
 
-                                // Auto-detect debounced
-                                clearTimeout((window as any)._detectTimer);
-                                (window as any)._detectTimer = setTimeout(async () => {
-                                    if (val.length > 5) {
-                                        setIsLoading(true);
-                                        try {
-                                            const res = await fetch("http://localhost:8001/analyze-symptoms", {
-                                                method: "POST",
-                                                headers: { "Content-Type": "application/json" },
-                                                body: JSON.stringify({ symptom_text: val }),
-                                            });
-                                            const data = await res.json();
-                                            if (data.detected_specialty) {
-                                                onChange("diagnosisCategory", data.detected_specialty);
-                                                (window as any)._detection = data;
-                                            }
-                                        } catch (err) {
-                                            console.error("Auto-detect failed", err);
-                                        } finally {
-                                            setIsLoading(false);
-                                        }
-                                    }
-                                }, 800);
-                            }}
-                            placeholder="e.g. Sharp pain in the knee, chest tightness after climbing stairs..."
-                            className="w-full min-h-[120px] rounded-2xl border border-slate-200 p-4 text-lg focus:ring-2 focus:ring-primary/20 outline-none transition-all bg-slate-50/50"
-                        />
-                        {isLoading && (
-                            <div className="absolute top-4 right-4 animate-spin">
-                                <Loader2 className="h-5 w-5 text-primary" />
+                    <div className="relative">
+                        <div className="flex items-start gap-3 mb-4 animate-in fade-in slide-in-from-left-2 duration-500">
+                            <div className="bg-white p-4 rounded-2xl rounded-tl-none border border-slate-200 shadow-sm max-w-[85%]">
+                                <p className="text-sm font-bold text-slate-700 leading-relaxed italic">
+                                    "Hello! I am your MedDecision AI Assistant. Please speak or type your symptoms clearly so I can analyze the best medical path for you."
+                                </p>
                             </div>
-                        )}
+                        </div>
+
+                        <div className="flex flex-col gap-3">
+                            <div className="flex items-center justify-between px-2">
+                                <Label className="text-base font-bold text-slate-800">Your Symptoms</Label>
+                                <VoiceRecorder onTranscription={(text) => {
+                                    onChange("symptoms", text);
+                                    // Trigger detection manually for voice as it's a one-shot
+                                    handleSymptomDetection(text);
+                                }} />
+                            </div>
+                            <div className="relative">
+                                <textarea
+                                    value={formData.symptoms || ""}
+                                    onChange={(e) => {
+                                        const val = e.target.value;
+                                        onChange("symptoms", val);
+                                        // Debounced detection for text
+                                        handleSymptomDetectionDebounced(val);
+                                    }}
+                                    placeholder="e.g. Sharp pain in the knee, chest tightness after climbing stairs..."
+                                    className="w-full min-h-[120px] rounded-2xl border border-slate-200 p-4 text-lg focus:ring-2 focus:ring-primary/20 outline-none transition-all bg-white shadow-sm"
+                                />
+                                {isLoading && (
+                                    <div className="absolute top-4 right-4 animate-spin">
+                                        <Loader2 className="h-5 w-5 text-primary" />
+                                    </div>
+                                )}
+                            </div>
+                        </div>
                     </div>
 
                     {formData.diagnosisCategory && (
                         <div className="flex items-center gap-2 animate-in fade-in slide-in-from-left-2 duration-500">
-                            <div className="bg-emerald-50 text-emerald-700 border border-emerald-100 py-1.5 px-4 rounded-full text-sm font-bold flex items-center gap-2">
+                            <div className="bg-emerald-50 text-emerald-700 border border-emerald-100 py-2 px-5 rounded-full text-sm font-bold flex items-center gap-2 shadow-sm">
                                 <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                                AI-Detected Specialty: {formData.diagnosisCategory}
+                                Detected Path: {formData.diagnosisCategory}
                             </div>
                             <button
                                 onClick={() => onChange("diagnosisCategory", "")}

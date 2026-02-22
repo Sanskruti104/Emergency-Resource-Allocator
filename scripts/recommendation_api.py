@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import logging
@@ -9,18 +9,29 @@ import uvicorn
 import pandas as pd
 import numpy as np
 import pickle
+import tempfile
+import shutil
 
 # Ensure scripts directory is in path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 # Import internal service modules
 try:
-    from cost_outcome_service import CostOutcomeService
-    from explainability_service import ExplainabilityService
-    from symptom_classifier import detect_specialty
+    from scripts.cost_outcome_service import CostOutcomeService
+    from scripts.explainability_service import ExplainabilityService
+    from scripts.symptom_classifier import detect_specialty
+    from scripts.voice_to_text import transcribe_audio
 except ImportError as e:
-    print(f"Integration Error: {e}")
-    raise
+    # Fallback for relative imports if running from root
+    print(f"Integration Error with scripts prefix: {e}. Attempting direct import.")
+    try:
+        from cost_outcome_service import CostOutcomeService
+        from explainability_service import ExplainabilityService
+        from symptom_classifier import detect_specialty
+        from voice_to_text import transcribe_audio
+    except ImportError as e_fallback:
+        print(f"Integration Error: {e_fallback}")
+        raise
 
 # Define Logger
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -136,6 +147,49 @@ async def generate_batch_recommendations(request: BatchRecommendationRequest):
     except Exception as e:
         logger.error(f"Batch Recommendation Error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/analyze-voice")
+async def analyze_voice(file: UploadFile = File(...)):
+    """
+    1. Transcribes audio via Sarvam AI
+    2. Runs transcript through Symptom Classifier
+    3. (Optional) Could run full recommendation if context is provided
+    """
+    temp_path = None
+    try:
+        # Save uploaded file to temp
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmp:
+            shutil.copyfileobj(file.file, tmp)
+            temp_path = tmp.name
+
+        # 1. Transcribe
+        stt_result = transcribe_audio(temp_path)
+        transcript = stt_result.get("transcript", "")
+        
+        if not transcript:
+            return {
+                "transcript": "",
+                "detected_specialty": None,
+                "confidence": 0.0,
+                "error": stt_result.get("error", "Failed to transcribe audio")
+            }
+
+        # 2. Detect Specialty
+        detection = detect_specialty(transcript)
+        
+        return {
+            "transcript": transcript,
+            "detected_specialty": detection.get("detected_specialty"),
+            "confidence": detection.get("confidence", 0.0),
+            "stt_confidence": stt_result.get("confidence", 0.0)
+        }
+
+    except Exception as e:
+        logger.error(f"Voice Analysis Error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        if temp_path and os.path.exists(temp_path):
+            os.remove(temp_path)
 
 def process_recommendations(p_data, h_list, t_data, symptom_text=None):
     try:
