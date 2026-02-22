@@ -27,7 +27,8 @@ const profileSchema = z.object({
     instruments: z.object({
         available: z.array(z.string()),
         last_verified: z.string(),
-        confidence: z.enum(["high", "medium", "low"])
+        verified: z.boolean().optional(),
+        confidence: z.enum(["high", "medium", "low"]).optional()
     }).optional()
 })
 

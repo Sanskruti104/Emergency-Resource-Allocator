@@ -26,7 +26,7 @@ export async function GET() {
         return NextResponse.json(hospital.instruments || {
             available: [],
             verified: false,
-            last_updated: ""
+            last_verified: ""
         });
     } catch (error: any) {
         console.error("GET Hospital Instruments error:", error);
@@ -58,7 +58,7 @@ export async function POST(request: Request) {
                 $set: {
                     instruments: {
                         available,
-                        last_updated: new Date().toISOString(),
+                        last_verified: new Date().toISOString(),
                         verified: true // Assuming clinical verification happens here
                     },
                     updatedAt: new Date()
@@ -87,7 +87,7 @@ export async function POST(request: Request) {
             success: true,
             instruments: {
                 available,
-                last_updated: new Date().toISOString(),
+                last_verified: new Date().toISOString(),
                 verified: true
             }
         });

@@ -7,7 +7,7 @@ import { logClinicalAudit, trackProfileChange } from "@/lib/clinical-security";
 // GET single doctor affiliation
 export async function GET(
     request: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         const session = await getServerSession();
@@ -41,7 +41,7 @@ export async function GET(
 // UPDATE doctor affiliation / schedule
 export async function PATCH(
     request: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         const session = await getServerSession();
@@ -102,7 +102,7 @@ export async function PATCH(
 // DELETE doctor affiliation
 export async function DELETE(
     request: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         const session = await getServerSession();

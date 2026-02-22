@@ -1,0 +1,43 @@
+{
+    "suitability_model": {
+        "rmse": 5.29742749174542,
+        "r2_score": 0.906417774521025
+    },
+    "financial_risk_model": {
+        "accuracy": 0.948,
+        "f1_macro": 0.9432705780659846,
+        "classification_report": {
+            "High": {
+                "precision": 0.9437689969604863,
+                "recall": 0.9409090909090909,
+                "f1-score": 0.9423368740515933,
+                "support": 660.0
+            },
+            "Low": {
+                "precision": 0.9417670682730924,
+                "recall": 0.9770833333333333,
+                "f1-score": 0.9591002044989775,
+                "support": 960.0
+            },
+            "Medium": {
+                "precision": 0.9739884393063584,
+                "recall": 0.8868421052631579,
+                "f1-score": 0.928374655647383,
+                "support": 380.0
+            },
+            "accuracy": 0.948,
+            "macro avg": {
+                "precision": 0.9531748348466457,
+                "recall": 0.9349448431685273,
+                "f1-score": 0.9432705780659846,
+                "support": 2000.0
+            },
+            "weighted avg": {
+                "precision": 0.9485497652362528,
+                "recall": 0.948,
+                "f1-score": 0.9477304511695378,
+                "support": 2000.0
+            }
+        }
+    }
+}

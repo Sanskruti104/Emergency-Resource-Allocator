@@ -64,7 +64,7 @@ export function InstrumentManager() {
     const [selected, setSelected] = React.useState<string[]>([])
     const [isLoading, setIsLoading] = React.useState(true)
     const [isSaving, setIsSaving] = React.useState(false)
-    const [lastUpdated, setLastUpdated] = React.useState<string | null>(null)
+    const [lastVerified, setLastVerified] = React.useState<string | null>(null)
 
     React.useEffect(() => {
         async function fetchInstruments() {
@@ -73,7 +73,7 @@ export function InstrumentManager() {
                 if (res.ok) {
                     const data = await res.json()
                     setSelected(data.available || [])
-                    setLastUpdated(data.last_updated)
+                    setLastVerified(data.last_verified)
                 }
             } catch (error) {
                 console.error("Failed to fetch instruments:", error)
@@ -94,7 +94,7 @@ export function InstrumentManager() {
             })
             if (res.ok) {
                 toast.success("Instrument list updated successfully")
-                setLastUpdated(new Date().toISOString())
+                setLastVerified(new Date().toISOString())
             } else {
                 toast.error("Failed to update instruments")
             }
@@ -249,9 +249,9 @@ export function InstrumentManager() {
                             </Button>
                         </div>
 
-                        {lastUpdated && (
+                        {lastVerified && (
                             <p className="text-[10px] text-center text-muted-foreground">
-                                Last updated: {new Date(lastUpdated).toLocaleString()}
+                                Last updated: {new Date(lastVerified).toLocaleString()}
                             </p>
                         )}
                     </div>

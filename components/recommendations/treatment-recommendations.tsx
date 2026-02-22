@@ -11,8 +11,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Building2, SlidersHorizontal, Loader2, AlertCircle } from "lucide-react"
+import { Building2, SlidersHorizontal, Loader2, AlertCircle, X as CloseIcon } from "lucide-react"
 import { HospitalCard, type Hospital } from "./hospital-card"
+import { ExplainabilityDashboard } from "@/components/medical/ExplainabilityUI"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog"
 
 function formatBudget(value: number): string {
   if (value >= 100000) {
@@ -29,6 +37,10 @@ export function TreatmentRecommendations() {
   const [hospitals, setHospitals] = useState<Hospital[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState("")
+
+  // --- XAI Integration State ---
+  const [selectedHospitalForXAI, setSelectedHospitalForXAI] = useState<Hospital | null>(null)
+  const [isXAIModalOpen, setIsXAIModalOpen] = useState(false)
 
   const treatment = searchParams.get("treatment") || "N/A"
   const urgency = searchParams.get("urgency") || "N/A"
@@ -50,29 +62,35 @@ export function TreatmentRecommendations() {
     { label: "Insurance", value: insurance },
   ]
 
+  const handleOpenXAI = (hospital: Hospital) => {
+    setSelectedHospitalForXAI(hospital)
+    setIsXAIModalOpen(true)
+  }
+
   useEffect(() => {
     async function fetchMatches() {
       setIsLoading(true)
       try {
+        // Switching to the Unified Recommendation Engine
         const payload = {
-          diagnosisCategory: diagnosis,
-          urgency,
-          budgetMin,
-          budgetMax,
-          insuranceType: insurance,
-          treatment,
-          latitude: lat,
-          longitude: lng,
-          travelFlexibility: travelFlex
+          treatmentId: diagnosis, // Pass whatever context is available
+          patientOverride: {
+            budgetMax,
+            insuranceType: insurance,
+            latitude: lat,
+            longitude: lng,
+            travelFlexibility: travelFlex,
+            urgency
+          }
         }
 
-        const res = await fetch("/api/treatment/match", {
+        const res = await fetch("/api/recommendation/generate", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload)
         })
 
-        if (!res.ok) throw new Error("Failed to fetch matches")
+        if (!res.ok) throw new Error("Failed to fetch contextual recommendations")
 
         const data = await res.json()
         if (data.matches) {
@@ -80,14 +98,17 @@ export function TreatmentRecommendations() {
             id: h.id || h._id,
             name: h.hospitalName,
             treatmentPath: treatment,
-            suitabilityScore: h.suitabilityScore || 0,
-            costRange: h.costRange || "Contact for Price",
-            insuranceAccepted: h.insuranceNetworks || [],
+            suitabilityScore: h.suitability_score || 0,
+            costRange: `₹${(h.financial_adjudication?.out_of_pocket || 0).toLocaleString()}`,
+            insuranceAccepted: h.insuranceNetworks || [insurance],
             bedAvailability: h.capacity?.totalBeds > 50 ? "High" : "Medium",
             icuReadiness: h.capacity?.icuBeds > 0,
-            fitReasons: h.fitReasons || [],
-            distance: h.distance,
-            rating: h.rating
+            fitReasons: h.fitReasons || [
+              { label: "AI Predicted Suitability", description: h.recommendation_status || "Highly Recommended", match: true }
+            ],
+            distance: h.distance || 12.5,
+            rating: h.rating,
+            xai_report: h // The full recommendation object contains XAI data
           }))
           setHospitals(mappedHospitals)
         }
@@ -222,10 +243,27 @@ export function TreatmentRecommendations() {
           ) : (
             <div className="flex flex-col gap-6">
               {sortedHospitals.map((hospital) => (
-                <HospitalCard key={hospital.id} hospital={hospital} />
+                <HospitalCard
+                  key={hospital.id}
+                  hospital={hospital}
+                  onViewXAI={() => handleOpenXAI(hospital)}
+                />
               ))}
             </div>
           )}
+
+          {/* XAI Explanation Modal */}
+          <Dialog open={isXAIModalOpen} onOpenChange={setIsXAIModalOpen}>
+            <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto rounded-3xl p-8 border-none bg-white dark:bg-slate-950">
+              <DialogHeader className="pr-12">
+                <DialogTitle className="text-2xl font-bold sr-only">Explainable AI Analysis</DialogTitle>
+                <DialogDescription className="sr-only">Detailed breakdown of why this hospital was recommended.</DialogDescription>
+              </DialogHeader>
+              {selectedHospitalForXAI && (
+                <ExplainabilityDashboard data={selectedHospitalForXAI.xai_report} />
+              )}
+            </DialogContent>
+          </Dialog>
 
           {/* Disclaimer */}
           <div className="mt-10 rounded-xl border border-border/60 bg-muted/30 px-6 py-4 text-center">

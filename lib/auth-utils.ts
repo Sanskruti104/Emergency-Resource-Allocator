@@ -8,7 +8,11 @@ export async function getServerSession() {
 
         if (!sessionCookie) return null;
 
-        const decodedClaims = await adminAuth.verifySessionCookie(sessionCookie, true);
+        if (!adminAuth) {
+            console.error("Firebase Admin Auth not initialized");
+            return null;
+        }
+        const decodedClaims = await adminAuth.verifySessionCookie(sessionCookie, false);
         return decodedClaims;
     } catch (error) {
         console.error("getServerSession error:", error);

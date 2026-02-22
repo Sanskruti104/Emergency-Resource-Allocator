@@ -10,7 +10,7 @@ import { logClinicalAudit } from "@/lib/clinical-security";
  */
 export async function PATCH(
     request: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         const session = await getServerSession();

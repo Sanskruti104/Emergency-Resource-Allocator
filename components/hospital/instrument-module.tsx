@@ -8,19 +8,19 @@ import { Stethoscope, Search } from "lucide-react"
 import { Input } from "@/components/ui/input"
 
 const AVAILABLE_INSTRUMENTS = [
-    { id: "xray", name: "X-Ray Machine" },
-    { id: "mri", name: "MRI Scanner" },
-    { id: "ct_scan", name: "CT Scanner" },
+    { id: "xray_machine", name: "X-Ray Machine" },
+    { id: "mri_scanner", name: "MRI Scanner" },
+    { id: "ct_scanner", name: "CT Scanner" },
     { id: "ventilator", name: "Ventilator" },
-    { id: "oxygen", name: "Oxygen Supply" },
+    { id: "oxygen_supply", name: "Oxygen Supply" },
     { id: "dialysis_unit", name: "Dialysis Unit" },
-    { id: "ecg", name: "ECG Machine" },
+    { id: "ecg_monitor", name: "ECG Machine" },
     { id: "defibrillator", name: "Defibrillator" },
-    { id: "ultrasound", name: "Ultrasound" },
+    { id: "ultrasound_machine", name: "Ultrasound" },
     { id: "endoscopy_unit", name: "Endoscopy Unit" },
     { id: "icu_monitor", name: "ICU Monitor" },
-    { id: "anesthesia", name: "Anesthesia Workstation" },
-    { id: "cath_lab", name: "Cath Lab (Catheterization)" },
+    { id: "anesthesia_workstation", name: "Anesthesia Workstation" },
+    { id: "cath_lab_system", name: "Cath Lab (Catheterization)" },
     { id: "orthopedic_tools", name: "Orthopedic Surgical Set" },
     { id: "pet_scan", name: "PET Scan" },
 ]

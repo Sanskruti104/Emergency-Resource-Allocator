@@ -49,6 +49,7 @@ export interface Hospital {
     starRating: number;
     confidenceLabel: string;
   };
+  xai_report?: any; // Added for integration
 }
 
 const bedColors: Record<string, string> = {
@@ -57,7 +58,7 @@ const bedColors: Record<string, string> = {
   High: "bg-accent/15 text-accent border-accent/30",
 }
 
-export function HospitalCard({ hospital }: { hospital: Hospital }) {
+export function HospitalCard({ hospital, onViewXAI }: { hospital: Hospital, onViewXAI?: (h: Hospital) => void }) {
   const [isOpen, setIsOpen] = useState(false)
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -228,36 +229,48 @@ export function HospitalCard({ hospital }: { hospital: Hospital }) {
               />
             </CollapsibleTrigger>
             <CollapsibleContent>
-              <div className="flex flex-col gap-3 border-t border-border/40 bg-muted/20 px-6 py-5">
-                {hospital.fitReasons.map((reason) => (
-                  <div
-                    key={reason.label}
-                    className="flex items-start gap-3"
-                  >
+              <div className="flex flex-col gap-4 border-t border-border/40 bg-muted/20 px-6 py-5">
+                <div className="space-y-3">
+                  {hospital.fitReasons.map((reason) => (
                     <div
-                      className={cn(
-                        "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full",
-                        reason.match
-                          ? "bg-accent/15 text-accent"
-                          : "bg-destructive/10 text-destructive"
-                      )}
+                      key={reason.label}
+                      className="flex items-start gap-3"
                     >
-                      {reason.match ? (
-                        <Check className="h-3 w-3" aria-hidden="true" />
-                      ) : (
-                        <X className="h-3 w-3" aria-hidden="true" />
-                      )}
+                      <div
+                        className={cn(
+                          "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full",
+                          reason.match
+                            ? "bg-accent/15 text-accent"
+                            : "bg-destructive/10 text-destructive"
+                        )}
+                      >
+                        {reason.match ? (
+                          <Check className="h-3 w-3" aria-hidden="true" />
+                        ) : (
+                          <X className="h-3 w-3" aria-hidden="true" />
+                        )}
+                      </div>
+                      <div className="flex flex-col gap-0.5">
+                        <span className="text-sm font-medium text-foreground">
+                          {reason.label}
+                        </span>
+                        <span className="text-xs text-muted-foreground leading-relaxed">
+                          {reason.description}
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex flex-col gap-0.5">
-                      <span className="text-sm font-medium text-foreground">
-                        {reason.label}
-                      </span>
-                      <span className="text-xs text-muted-foreground leading-relaxed">
-                        {reason.description}
-                      </span>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
+
+                {onViewXAI && (
+                  <Button
+                    onClick={() => onViewXAI(hospital)}
+                    variant="ghost"
+                    className="w-full mt-2 text-primary font-bold hover:bg-primary/10 rounded-xl"
+                  >
+                    View Detailed AI Reasoning Report
+                  </Button>
+                )}
               </div>
             </CollapsibleContent>
           </div>
