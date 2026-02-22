@@ -29,7 +29,7 @@ export function VoiceRecorder({ onTranscription }: VoiceRecorderProps) {
             }
 
             mediaRecorder.onstop = async () => {
-                const audioBlob = new Blob(chunksRef.current, { type: "audio/wav" })
+                const audioBlob = new Blob(chunksRef.current, { type: "audio/webm" })
                 await handleVoiceUpload(audioBlob)
                 // Stop all tracks
                 stream.getTracks().forEach(track => track.stop())

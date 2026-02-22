@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from dotenv import load_dotenv
 import logging
 import json
 import os
@@ -11,6 +12,9 @@ import numpy as np
 import pickle
 import tempfile
 import shutil
+
+# Load environment variables
+load_dotenv(".env.local")
 
 # Ensure scripts directory is in path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
