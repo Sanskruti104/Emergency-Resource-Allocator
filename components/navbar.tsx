@@ -17,11 +17,17 @@ export function Navbar() {
               MedDecision
             </span>
           </a>
-          <div className="flex items-center gap-3">
-            <Button variant="ghost" className="hidden sm:inline-flex" size="sm" asChild>
+          <div className="flex items-center gap-2 sm:gap-3">
+            <Button variant="outline" className="text-xs h-9 rounded-full px-3.5 border-blue-300 dark:border-blue-700 text-blue-700 dark:text-blue-300 bg-blue-50/60 dark:bg-blue-950/40 hover:bg-blue-100 flex items-center gap-1.5 font-semibold" size="sm" asChild>
+              <a href="/dashboards">
+                <Activity className="h-3.5 w-3.5" />
+                <span>Dashboards Hub</span>
+              </a>
+            </Button>
+            <Button variant="ghost" className="hidden sm:inline-flex text-xs" size="sm" asChild>
               <a href="/login">Sign In</a>
             </Button>
-            <Button className="rounded-full px-6" size="sm" asChild>
+            <Button className="rounded-full px-5 text-xs" size="sm" asChild>
               <a href="/signup-selection">Sign Up</a>
             </Button>
           </div>

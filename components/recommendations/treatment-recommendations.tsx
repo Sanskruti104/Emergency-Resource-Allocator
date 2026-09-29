@@ -21,6 +21,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog"
+import { PatientEmergencyDispatch } from "@/components/emergency/patient-emergency-dispatch"
 
 function formatBudget(value: number): string {
   if (value >= 100000) {
@@ -180,7 +181,12 @@ export function TreatmentRecommendations() {
       </div>
 
       <main className="flex-1">
-        <section className="mx-auto max-w-4xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+        <section className="mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+          {/* Real Emergency Assistance Dispatch Flow */}
+          <div className="mb-10">
+            <PatientEmergencyDispatch />
+          </div>
+
           {/* Header + Sort */}
           <div className="mb-10 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
             <div className="flex flex-col gap-3">

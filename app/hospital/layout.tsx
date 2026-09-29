@@ -4,14 +4,27 @@ import { getServerSession } from "@/lib/auth-utils";
 import clientPromise from "@/lib/mongodb";
 import { redirect } from "next/navigation";
 
+import { headers } from "next/headers";
+
 export default async function HospitalLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
     const session = await getServerSession();
+    const headerList = await headers();
+    const isEmergencyBoard = headerList.get("x-emergency-board") === "1";
 
     if (!session) {
+        if (isEmergencyBoard) {
+            return (
+                <div className="min-h-screen bg-slate-50/50">
+                    <main className="flex-1">
+                        {children}
+                    </main>
+                </div>
+            );
+        }
         redirect("/login/hospital");
     }
 
@@ -25,6 +38,15 @@ export default async function HospitalLayout({
     ]);
 
     if (userRecord?.role !== "hospital") {
+        if (isEmergencyBoard) {
+            return (
+                <div className="min-h-screen bg-slate-50/50">
+                    <main className="flex-1">
+                        {children}
+                    </main>
+                </div>
+            );
+        }
         redirect("/login/hospital");
     }
 

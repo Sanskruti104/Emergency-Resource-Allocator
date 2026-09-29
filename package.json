@@ -6,7 +6,10 @@
     "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "node scripts/test_patient_auth.mjs && node scripts/test_patient_to_ambulance_dispatch.mjs",
+    "test:auth": "node scripts/test_patient_auth.mjs",
+    "test:dispatch": "node scripts/test_patient_to_ambulance_dispatch.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
@@ -75,6 +78,7 @@
     "@types/react-dom": "19.2.3",
     "postcss": "^8.5",
     "tailwindcss": "^3.4.17",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "5.7.3"
   },
   "pnpm": {

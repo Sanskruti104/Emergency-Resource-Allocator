@@ -2,6 +2,22 @@ import { NextResponse } from "next/server";
 import { adminAuth } from "@/lib/firebase-admin";
 import { cookies } from "next/headers";
 import clientPromise from "@/lib/mongodb";
+import { getServerSession } from "@/lib/auth-utils";
+
+export async function GET() {
+    try {
+        const session = await getServerSession();
+        if (!session) {
+            return NextResponse.json({ authenticated: false }, { status: 401 });
+        }
+        return NextResponse.json({
+            authenticated: true,
+            user: session
+        });
+    } catch (error: any) {
+        return NextResponse.json({ authenticated: false, error: error.message }, { status: 500 });
+    }
+}
 
 export async function POST(request: Request) {
     try {
@@ -68,3 +84,23 @@ export async function POST(request: Request) {
         }, { status: 500 });
     }
 }
+
+export async function DELETE() {
+    try {
+        const cookieStore = await cookies();
+        cookieStore.delete("session");
+        cookieStore.delete("user-role");
+
+        return NextResponse.json({
+            success: true,
+            message: "Session cleared successfully"
+        });
+    } catch (error: any) {
+        console.error("Session deletion error:", error);
+        return NextResponse.json({
+            error: "Failed to clear session",
+            details: error.message
+        }, { status: 500 });
+    }
+}
+

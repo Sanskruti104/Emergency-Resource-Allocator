@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button"
 
 const menuItems = [
     { title: "Dashboard Overview", icon: LayoutDashboard, href: "/hospital/dashboard" },
+    { title: "Emergency Live Board", icon: Activity, href: "/hospital/emergency-board" },
     { title: "Hospital Profile", icon: UserRound, href: "/hospital/profile" },
     { title: "Visiting Doctors", icon: Users, href: "/hospital/doctors" },
     { title: "Capacity Management", icon: Activity, href: "/hospital/capacity" },

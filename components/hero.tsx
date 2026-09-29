@@ -31,11 +31,16 @@ export function Hero() {
           with data-driven insights.
         </p>
 
-        <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <Button asChild size="lg" className="h-12 rounded-full px-10 text-base shadow-lg shadow-primary/25">
+        <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row flex-wrap">
+          <Button asChild size="lg" className="h-12 rounded-full px-8 text-base shadow-lg shadow-blue-600/25 bg-blue-600 hover:bg-blue-700 text-white font-semibold">
+            <Link href="/dashboards">
+              Launch 3-Dashboard Hub
+              <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
+            </Link>
+          </Button>
+          <Button asChild size="lg" variant="outline" className="h-12 rounded-full px-8 text-base">
             <Link href="/signup-selection">
               Get Started
-              <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
             </Link>
           </Button>
           <Button

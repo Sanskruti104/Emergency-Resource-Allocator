@@ -13,8 +13,20 @@ export function middleware(request: NextRequest) {
     const isHospitalPath = hospitalPaths.some(path => pathname.startsWith(path))
     const isPatientPath = patientPaths.some(path => pathname.startsWith(path))
 
-    // 1. Hospital Path Protection
+    const isHospitalEmergencyBoard = pathname.startsWith('/hospital/emergency-board')
+
+    // 1. Hospital Path Protection (allow emergency-board demo access)
     if (isHospitalPath) {
+        if (isHospitalEmergencyBoard) {
+            const requestHeaders = new Headers(request.headers)
+            requestHeaders.set('x-emergency-board', '1')
+            return NextResponse.next({
+                request: {
+                    headers: requestHeaders,
+                }
+            })
+        }
+
         // If no session or role is not hospital, redirect to login
         if (!sessionCookie || userRole !== 'hospital') {
             const loginUrl = new URL('/login/hospital', request.url)

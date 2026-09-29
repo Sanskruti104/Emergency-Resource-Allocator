@@ -65,7 +65,7 @@ export async function POST(request: Request) {
             detection: detectionInfo,
             condition: {
                 ...(treatmentInfo || {}),
-                selectedTreatment: treatmentInfo?.selectedTreatment || `General Consultation (${diagnosisCategory})`,
+                selectedTreatment: (treatmentInfo as any)?.selectedTreatment || `General Consultation (${diagnosisCategory})`,
                 conditionCategory: diagnosisCategory || (treatmentInfo as any)?.conditionCategory,
                 symptoms: query
             }

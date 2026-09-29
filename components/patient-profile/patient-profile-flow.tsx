@@ -12,6 +12,7 @@ import { StepBasicContext } from "./step-basic-context"
 import { StepTreatmentContext } from "./step-treatment-context"
 import { StepFinancialContext } from "./step-financial-context"
 import { StepPreferences } from "./step-preferences"
+import { PatientEmergencyDispatch } from "@/components/emergency/patient-emergency-dispatch"
 
 const TOTAL_STEPS = 4
 
@@ -166,6 +167,11 @@ export function PatientProfileFlow() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-muted/30 px-4 py-12">
       <div className="w-full max-w-2xl">
+        {/* Real Emergency Assistance Dispatch Flow */}
+        <div className="mb-6">
+          <PatientEmergencyDispatch />
+        </div>
+
         {/* Step indicator */}
         <div className="mb-8 flex flex-col gap-4">
           <div className="flex items-center justify-between">

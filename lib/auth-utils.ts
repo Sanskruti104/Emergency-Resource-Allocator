@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { adminAuth } from "./firebase-admin";
+import { verifyMongoSessionToken } from "./mongodb-auth";
 
 export async function getServerSession() {
     try {
@@ -8,6 +9,20 @@ export async function getServerSession() {
 
         if (!sessionCookie) return null;
 
+        // 1. Check for native MongoDB signed session token
+        if (sessionCookie.startsWith("mda.")) {
+            const mongoSession = verifyMongoSessionToken(sessionCookie);
+            if (mongoSession) {
+                return {
+                    uid: mongoSession.uid,
+                    email: mongoSession.email,
+                    role: mongoSession.role,
+                };
+            }
+            return null;
+        }
+
+        // 2. Fallback to Firebase Admin session cookie verification for backwards compatibility
         if (!adminAuth) {
             console.error("Firebase Admin Auth not initialized");
             return null;
